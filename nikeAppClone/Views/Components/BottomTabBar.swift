@@ -22,6 +22,7 @@ struct BottomTabBar: View {
         .padding(.bottom, 18)
         .background(Color.white)
     }
+    
     private func tabButton(tab: Tab, image: String) -> some View {
         Button {
             selectedTab = tab

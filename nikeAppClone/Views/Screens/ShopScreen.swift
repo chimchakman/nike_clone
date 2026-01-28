@@ -27,30 +27,27 @@ import SwiftUI
 struct ShopScreen: View {
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                TopBar(title: "Socks", buttons: [.back, .settings, .search])
-
-                ScrollView {
-                    LazyVGrid(
-                        columns: [
-                            GridItem(.flexible(), spacing: 6),
-                            GridItem(.flexible(), spacing: 0)
-                        ],
-                        spacing: 18
-                    ) {
-                        ForEach(products) { product in
-                            NavigationLink(value: product) {
-                                ProductCard(product: product)
-                            }
-                            .buttonStyle(.plain)
+        VStack(spacing: 0) {
+            TopBar(title: "Socks", buttons: [.back, .settings, .search])
+            ScrollView {
+                LazyVGrid(
+                    columns: [
+                        GridItem(.flexible(), spacing: 6),
+                        GridItem(.flexible(), spacing: 0)
+                    ],
+                    spacing: 18
+                ) {
+                    ForEach(products) { product in
+                        NavigationLink(value: product) {
+                            ProductCard(product: product)
                         }
+                        .buttonStyle(.plain)
                     }
                 }
             }
-            .navigationDestination(for: Product.self) { product in
-                ProductDetailScreen(product: product)
-            }
+        }
+        .navigationDestination(for: Product.self) { product in
+            ProductDetailScreen(product: product)
         }
     }
 }
