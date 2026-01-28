@@ -7,18 +7,49 @@
 
 import SwiftUI
 
+//struct ShopScreen: View {
+//    
+//    var body: some View {
+//        TopBar(title: "Socks", buttons: [.back, .settings, .search])
+//        ScrollView {
+//            LazyVGrid(columns: [
+//                GridItem(.flexible(), spacing: 6),
+//                GridItem(.flexible(), spacing: 0)
+//            ], spacing: 18) {
+//                ForEach(products) {
+//                    ProductCard(product: $0)
+//                }
+//            }
+//        }
+//    }
+//}
+
 struct ShopScreen: View {
-    
+
     var body: some View {
-        TopBar(title: "Socks", buttons: [.back, .settings, .search])
-        ScrollView {
-            LazyVGrid(columns: [
-                GridItem(.flexible(), spacing: 6),
-                GridItem(.flexible(), spacing: 0)
-            ], spacing: 18) {
-                ForEach(products) {
-                    ProductCard(product: $0)
+        NavigationStack {
+            VStack(spacing: 0) {
+                TopBar(title: "Socks", buttons: [.back, .settings, .search])
+
+                ScrollView {
+                    LazyVGrid(
+                        columns: [
+                            GridItem(.flexible(), spacing: 6),
+                            GridItem(.flexible(), spacing: 0)
+                        ],
+                        spacing: 18
+                    ) {
+                        ForEach(products) { product in
+                            NavigationLink(value: product) {
+                                ProductCard(product: product)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
                 }
+            }
+            .navigationDestination(for: Product.self) { product in
+                ProductDetailScreen(product: product)
             }
         }
     }

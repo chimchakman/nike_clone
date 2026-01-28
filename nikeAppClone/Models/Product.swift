@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Product: Identifiable {
+struct Product: Identifiable, Hashable {
     let id: UUID = UUID()
     let name: String
     let description: String
