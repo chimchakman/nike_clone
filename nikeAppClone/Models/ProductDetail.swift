@@ -8,10 +8,18 @@
 import SwiftUI
 
 struct ProductDetail: Identifiable, Hashable {
-    let id: UUID = UUID()
+    let id: String
     let name: String
+    let category: String
     let longDescription: String
-    let colors: String
+    let info: String
     let price: String
     let image: String
+    let imageDetail1: String
+    let imageDetail2: String
+    let imageDetail3: String
+    let copyTitle: String
+    let copyDescription: String
+    let benefits: String
+    let productDetails: String
 }
