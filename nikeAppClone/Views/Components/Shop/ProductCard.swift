@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct ProductCard: View {
+    @EnvironmentObject var favouriteStore: FavouriteStore
     var product: Product
     var body: some View {
         VStack(alignment: .leading) {
@@ -15,8 +16,10 @@ struct ProductCard: View {
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                Button(action: {}) {
-                    Image("Icon")
+                Button(action: {favouriteStore.toggle(product.id)}) {
+                    Image(favouriteStore.isFavourite(product.id)
+                          ? "likeFilled"
+                          : "like")
                         .padding(10)
                 }
             }

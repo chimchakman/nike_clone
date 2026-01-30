@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ProductDetailScreen: View {
+    @EnvironmentObject var favouriteStore: FavouriteStore
     let product: Product
     let productDetail: ProductDetail
     init(product: Product) {
@@ -84,7 +85,7 @@ struct ProductDetailScreen: View {
                     .frame(width: 327)
                 RoundedButton("Add to Bag", fillColor: .black, borderColor: .clear, textColor: .white, action: {})
                     .frame(width: 327)
-                RoundedButton("Favourite", icon: .asset(name: "HeartStraight"), borderColor: .gray.opacity(0.3), textColor: .black, action: {})
+                RoundedButton("Favourite", icon: .asset(name: favouriteStore.isFavourite(product.id) ? "likeFilled" : "like"), borderColor: .gray.opacity(0.3), textColor: .black, action: {favouriteStore.toggle(product.id)})
                     .frame(width: 327)
             }
             .frame(height: 267)
@@ -159,4 +160,5 @@ struct ProductDetailScreen: View {
 
 #Preview {
     ProductDetailScreen(product: products[3])
+        .environmentObject(FavouriteStore())
 }
