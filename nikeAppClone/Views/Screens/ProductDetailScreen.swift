@@ -80,19 +80,17 @@ struct ProductDetailScreen: View {
             
             
             VStack (spacing: 20) {
-                Button {} label: {
-                    Image("CTA")
-                }
-                Button {} label: {
-                    Image("CTA-4")
-                }
-                Button {} label: {
-                    Image("CTA-7")
-                }
+                RoundedButton("Select Size", icon: .asset(name: "CaretDown"), borderColor: .gray.opacity(0.3), textColor: .black, action: {})
+                    .frame(width: 327)
+                RoundedButton("Add to Bag", fillColor: .black, borderColor: .clear, textColor: .white, action: {})
+                    .frame(width: 327)
+                RoundedButton("Favourite", icon: .asset(name: "HeartStraight"), borderColor: .gray.opacity(0.3), textColor: .black, action: {})
+                    .frame(width: 327)
             }
             .frame(height: 267)
+            .padding(.bottom, 30)
             
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 30) {
 
                         
                 VStack(alignment: .leading, spacing: 10) {
