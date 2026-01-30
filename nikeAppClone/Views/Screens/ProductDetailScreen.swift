@@ -8,47 +8,37 @@
 import SwiftUI
 
 struct ProductDetailScreen: View {
-    var product: Product = Product(
-        name: "Nike Everyday Plus Cushioned",
-        description: "The Nike Everyday Plus Cushioned Socks bring comfort to your workout with extra cushioning under the heel and forefoot and a snug, supportive arch band. Sweat-wicking power and breathability up top help keep your feet dry and cool to help push you through that extra set.",
-        colors: "black",
-        price: "US$10",
-        image: "productDetail1"
-    )
-    private var deliveryDateText: String {
-        let calendar = Calendar.current
-        let today = Date()
-
-        let startDate = calendar.date(byAdding: .day, value: 3, to: today)!
-        let endDate = calendar.date(byAdding: .day, value: 5, to: today)!
-
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US")
-        formatter.dateFormat = "EEE, d MMM"
-
-        return "Arrives \(formatter.string(from: startDate))\nto \(formatter.string(from: endDate))"
-    }
+    let product: Product
+    let productDetail: ProductDetail
+    init(product: Product) {
+            guard let detail = productDetails.first(where: { $0.id == product.id }) else {
+                fatalError("ProductDetail must exist for product id: \(product.id)")
+            }
+            self.product = product
+            self.productDetail = detail
+        }
+    
     
     var body: some View {
-        TopBar(title: product.name, buttons: [.back, .search])
+        TopBar(title: productDetail.name, buttons: [.back, .search])
         ScrollView (.vertical, showsIndicators: false) {
             VStack {
-                Image("productDetail1")
+                Image(productDetail.image)
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: .infinity)
                 
                 ScrollView (.horizontal, showsIndicators: false) {
                     HStack {
-                        Image("productDetail2")
+                        Image(productDetail.imageDetail1)
                             .resizable()
                             .scaledToFill()
                             .frame(width: 160, height: 160)
-                        Image("productDetail3")
+                        Image(productDetail.imageDetail2)
                             .resizable()
                             .scaledToFill()
                             .frame(width: 160, height: 160)
-                        Image("productDetail4")
+                        Image(productDetail.imageDetail3)
                             .resizable()
                             .scaledToFill()
                             .frame(width: 160, height: 160)
@@ -58,46 +48,49 @@ struct ProductDetailScreen: View {
             .frame(height: 629)
             
             VStack (alignment: .leading, spacing: 20) {
-                Text("Training Crew Socks")
+                Text(productDetail.category)
                     .font(.system(size: 16, weight: .regular, design: .default))
-                    
-                Text(product.name)
+                
+                Text(productDetail.name)
                     .font(.system(size: 28, weight: .medium, design: .default))
-                    
-                Text(product.price)
+                
+                Text(productDetail.price)
                     .font(.system(size: 16, weight: .medium, design: .default))
-                    
-                Text(product.description)
+                
+                Text(productDetail.longDescription)
                     .font(.system(size: 16, weight: .regular, design: .default))
                 
-                Text("• Shown: Multi-Color\n• Style: SX6897-965")
+                Text(productDetail.info)
                     .font(.system(size: 16, weight: .regular, design: .default))
-                    
-                Text("View Product Details")
-                    .font(.system(size: 16, weight: .regular, design: .default))
-                    .foregroundStyle(.gray)
-                    .padding(.vertical, 20)
                 
-                Spacer()
+                NavigationLink (value: productDetail) {
+                    Text("View Product Details")
+                        .font(.system(size: 16, weight: .regular, design: .default))
+                        .foregroundStyle(.gray)
+                        .padding(.vertical, 20)
+                }
+                    Spacer()
             }
             .frame(maxWidth: 327, maxHeight: 516, alignment: .leading)
             .padding(.leading, 24)
             .padding(.top, 40)
+            .navigationDestination(for: ProductDetail.self) { productDetail in
+                ViewProductDetailScreen(productDetail: productDetail)
+            }
+            
             
             VStack (spacing: 20) {
-                Button {} label: {
-                    Image("CTA")
-                }
-                Button {} label: {
-                    Image("CTA-4")
-                }
-                Button {} label: {
-                    Image("CTA-7")
-                }
+                RoundedButton("Select Size", icon: .asset(name: "CaretDown"), borderColor: .gray.opacity(0.3), textColor: .black, action: {})
+                    .frame(width: 327)
+                RoundedButton("Add to Bag", fillColor: .black, borderColor: .clear, textColor: .white, action: {})
+                    .frame(width: 327)
+                RoundedButton("Favourite", icon: .asset(name: "HeartStraight"), borderColor: .gray.opacity(0.3), textColor: .black, action: {})
+                    .frame(width: 327)
             }
             .frame(height: 267)
+            .padding(.bottom, 30)
             
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 30) {
 
                         
                 VStack(alignment: .leading, spacing: 10) {
@@ -159,12 +152,11 @@ struct ProductDetailScreen: View {
                 }
             }
             .padding(.horizontal, 24)
-            
-            
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 
 #Preview {
-    ProductDetailScreen()
+    ProductDetailScreen(product: products[3])
 }
