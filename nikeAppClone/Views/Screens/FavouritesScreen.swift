@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FavouritesScreen: View {
-    @EnvironmentObject var favouriteStore: FavouriteStore
+    @Environment(FavouriteStore.self) var favouriteStore: FavouriteStore
     private var likedProducts: [Product] {
             products.filter { favouriteStore.isFavourite($0.id) }
         }
@@ -54,9 +54,5 @@ struct FavouritesScreen: View {
     }
 }
 
-#Preview {
-    FavouritesScreen()
-        .environmentObject(FavouriteStore())
-}
 
 

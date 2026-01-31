@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ProductDetailScreen: View {
-    @EnvironmentObject var favouriteStore: FavouriteStore
+    @Environment(FavouriteStore.self) var favouriteStore: FavouriteStore
     let product: Product
     let productDetail: ProductDetail
     init(product: Product) {
@@ -160,5 +160,5 @@ struct ProductDetailScreen: View {
 
 #Preview {
     ProductDetailScreen(product: products[3])
-        .environmentObject(FavouriteStore())
+        .environment(FavouriteStore())
 }

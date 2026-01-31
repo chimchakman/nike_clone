@@ -5,13 +5,13 @@
 //  Created by Sunghyun Kim on 1/30/26.
 //
 
+import SwiftUI
 import Foundation
 import Combine
 
-@MainActor
-final class FavouriteStore: ObservableObject {
-    @Published private(set) var favouriteIDs: Set<String> = []
-
+@Observable
+final class FavouriteStore {
+    private(set) var favouriteIDs: Set<String> = []
     private let defaults: UserDefaults
     private let storageKey = "favourite_product_ids"
 

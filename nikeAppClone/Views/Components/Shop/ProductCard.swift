@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct ProductCard: View {
-    @EnvironmentObject var favouriteStore: FavouriteStore
+    @Environment(FavouriteStore.self) var favouriteStore: FavouriteStore
     var product: Product
     var body: some View {
         VStack(alignment: .leading) {
