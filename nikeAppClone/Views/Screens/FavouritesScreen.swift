@@ -10,7 +10,7 @@ import SwiftUI
 struct FavouritesScreen: View {
     @Environment(FavouriteStore.self) var favouriteStore: FavouriteStore
     private var likedProducts: [Product] {
-            products.filter { favouriteStore.isFavourite($0.id) }
+            Products.getAll().filter { favouriteStore.isFavourite($0.id) }
         }
     var body: some View {
         VStack(spacing: 0) {

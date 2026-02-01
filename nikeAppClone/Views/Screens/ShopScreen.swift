@@ -20,7 +20,7 @@ struct ShopScreen: View {
                     ],
                     spacing: 18
                 ) {
-                    ForEach(products) { product in
+                    ForEach(Products.getAll()) { product in
                         NavigationLink(value: product) {
                             ProductCard(product: product)
                         }

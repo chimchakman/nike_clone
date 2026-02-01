@@ -44,7 +44,7 @@ struct HomeScreen: View {
                 .padding(.top, 40)
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHStack(spacing: 6) {
-                        ForEach(homeProducts) { product in
+                        ForEach(HomeProducts.getAll()) { product in
                             ProductCardHoriontal(product: product)
                                 .frame(width: 314)
                         }
