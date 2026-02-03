@@ -20,7 +20,7 @@ struct SelectedScreen: View {
         TabView(selection: $selectedTab) {
             NavigationStack(path: $homePath) { HomeScreen() }.tag(Tab.home)
             NavigationStack(path: $shopPath) { ShopScreen() }.tag(Tab.shop)
-            NavigationStack(path: $favPath) { FavouritesScreen() }.tag(Tab.favourites)
+            NavigationStack(path: $favPath) { FavouritesScreen(selectedTab: $selectedTab) }.tag(Tab.favourites)
             NavigationStack(path: $bagPath) { BagScreen() }.tag(Tab.bag)
             NavigationStack(path: $profilePath) { ProfileScreen() }.tag(Tab.profile)
         }

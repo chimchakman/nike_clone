@@ -9,6 +9,9 @@ import SwiftUI
 
 struct FavouritesScreen: View {
     @Environment(FavouriteStore.self) var favouriteStore: FavouriteStore
+    @State private var selectedProduct: Product?
+    @State private var sheetStep: SheetStep = .options
+    @Binding var selectedTab: Tab
     private var likedProducts: [Product] {
             Products.getAll().filter { favouriteStore.isFavourite($0.id) }
         }
@@ -40,16 +43,27 @@ struct FavouritesScreen: View {
                     spacing: 18
                 ) {
                     ForEach(likedProducts) { product in
-                        NavigationLink(value: product) {
-                            ProductCard(product: product)
+                        Button {
+                            selectedProduct = product
+                            sheetStep = .options
+                        } label: {
+                            ProductCard(product: product, layOut: .favourite)
                         }
                         .buttonStyle(.plain)
                     }
                 }
             }
         }
-        .navigationDestination(for: Product.self) { product in
-            ProductDetailScreen(product: product)
+        .sheet(item: $selectedProduct) { product in
+            // 시트 콘텐츠
+            ProductSheet(
+                product: product,
+                step: $sheetStep,
+                onClose: { selectedTab = .bag }
+            )
+            .presentationDetents([.medium, .large])   // ✅ 반만 열리기(중간) + 필요시 확장(큰)
+            .presentationDragIndicator(.visible)      // 위에 드래그 바 표시
+            .presentationCornerRadius(16)
         }
     }
 }
