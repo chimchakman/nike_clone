@@ -8,12 +8,11 @@
 import SwiftUI
 
 struct ProductDetailScreen: View {
+    @Environment(FavouriteStore.self) var favouriteStore: FavouriteStore
     let product: Product
     let productDetail: ProductDetail
     init(product: Product) {
-            guard let detail = productDetails.first(where: { $0.id == product.id }) else {
-                fatalError("ProductDetail must exist for product id: \(product.id)")
-            }
+            let detail = ProductDetails.getOne(id: product.id)
             self.product = product
             self.productDetail = detail
         }
@@ -80,11 +79,11 @@ struct ProductDetailScreen: View {
             
             
             VStack (spacing: 20) {
-                RoundedButton("Select Size", icon: .asset(name: "CaretDown"), borderColor: .gray.opacity(0.3), textColor: .black, action: {})
+                RoundedButton("Select Size", icon: .right(name: "CaretDown"), theme: .black, style: .outline, action: {})
                     .frame(width: 327)
-                RoundedButton("Add to Bag", fillColor: .black, borderColor: .clear, textColor: .white, action: {})
+                RoundedButton("Add to Bag", theme: .black, style: .solid, action: {})
                     .frame(width: 327)
-                RoundedButton("Favourite", icon: .asset(name: "HeartStraight"), borderColor: .gray.opacity(0.3), textColor: .black, action: {})
+                RoundedButton("Favourite", icon: .right(name: favouriteStore.isFavourite(product.id) ? "likeFilled" : "like"), theme: .black, style: .outline, action: {favouriteStore.toggle(product.id)})
                     .frame(width: 327)
             }
             .frame(height: 267)
@@ -158,5 +157,6 @@ struct ProductDetailScreen: View {
 }
 
 #Preview {
-    ProductDetailScreen(product: products[3])
+    ProductDetailScreen(product: Products.getOne(id: "Nike03"))
+        .environment(FavouriteStore())
 }

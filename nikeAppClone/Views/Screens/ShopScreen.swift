@@ -7,23 +7,6 @@
 
 import SwiftUI
 
-//struct ShopScreen: View {
-//    
-//    var body: some View {
-//        TopBar(title: "Socks", buttons: [.back, .settings, .search])
-//        ScrollView {
-//            LazyVGrid(columns: [
-//                GridItem(.flexible(), spacing: 6),
-//                GridItem(.flexible(), spacing: 0)
-//            ], spacing: 18) {
-//                ForEach(products) {
-//                    ProductCard(product: $0)
-//                }
-//            }
-//        }
-//    }
-//}
-
 struct ShopScreen: View {
 
     var body: some View {
@@ -37,7 +20,7 @@ struct ShopScreen: View {
                     ],
                     spacing: 18
                 ) {
-                    ForEach(products) { product in
+                    ForEach(Products.getAll()) { product in
                         NavigationLink(value: product) {
                             ProductCard(product: product)
                         }
