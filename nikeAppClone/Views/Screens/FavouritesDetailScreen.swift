@@ -19,6 +19,7 @@ struct ProductSheet: View {
 
     @State private var selectedSize: String = "L"
     @Environment(\.dismiss) private var dismiss
+    @Environment(BagStore.self) var bagStore: BagStore
 
     var body: some View {
         switch step {
@@ -60,6 +61,7 @@ struct ProductSheet: View {
 
                 Spacer()
                 RoundedButton("Add to Bag", theme: .black, style: .solid, action: {
+                    bagStore.add(productId: product.id, size: selectedSize)
                     withAnimation {
                         step = .added
                     }
@@ -88,4 +90,5 @@ struct ProductSheet: View {
 
 #Preview {
     ProductSheet(product: Products.getOne(id: "Nike01"), step: .constant(.options), onClose: {})
+        .environment(BagStore())
 }

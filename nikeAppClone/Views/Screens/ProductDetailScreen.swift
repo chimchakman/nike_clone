@@ -9,8 +9,10 @@ import SwiftUI
 
 struct ProductDetailScreen: View {
     @Environment(FavouriteStore.self) var favouriteStore: FavouriteStore
+    @Environment(BagStore.self) var bagStore: BagStore
     let product: Product
     let productDetail: ProductDetail
+    @State private var selectedSize: String = "M"
     init(product: Product) {
             let detail = ProductDetails.getOne(id: product.id)
             self.product = product
@@ -81,7 +83,9 @@ struct ProductDetailScreen: View {
             VStack (spacing: 20) {
                 RoundedButton("Select Size", icon: .right(name: "CaretDown"), theme: .black, style: .outline, action: {})
                     .frame(width: 327)
-                RoundedButton("Add to Bag", theme: .black, style: .solid, action: {})
+                RoundedButton("Add to Bag", theme: .black, style: .solid, action: {
+                    bagStore.add(productId: product.id, size: selectedSize)
+                })
                     .frame(width: 327)
                 RoundedButton("Favourite", icon: .right(name: favouriteStore.isFavourite(product.id) ? "likeFilled" : "like"), theme: .black, style: .outline, action: {favouriteStore.toggle(product.id)})
                     .frame(width: 327)
@@ -159,4 +163,5 @@ struct ProductDetailScreen: View {
 #Preview {
     ProductDetailScreen(product: Products.getOne(id: "Nike03"))
         .environment(FavouriteStore())
+        .environment(BagStore())
 }

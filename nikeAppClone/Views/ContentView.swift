@@ -10,12 +10,14 @@ import SwiftUI
 struct ContentView: View {
     @State private var selectedTab: Tab = .home
     var favouriteStore = FavouriteStore()
+    var bagStore = BagStore()
     var body: some View {
         VStack(spacing: 0) {
             SelectedScreen(selectedTab: $selectedTab)
             BottomTabBar(selectedTab: $selectedTab)
         }
         .environment(favouriteStore)
+        .environment(bagStore)
     }
 }
 
