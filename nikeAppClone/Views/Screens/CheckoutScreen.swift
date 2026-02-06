@@ -10,6 +10,7 @@ import SwiftUI
 struct CheckoutScreen: View {
     @Environment(\.dismiss) var dismiss
     @Environment(BagStore.self) var bagStore: BagStore
+    @Environment(Products.self) var products: Products
     @State private var showDeliveryOptions = false
 
     var body: some View {
@@ -19,7 +20,7 @@ struct CheckoutScreen: View {
                     VStack(alignment: .leading, spacing: 0) {
                         // Product Header
                         if let firstItem = bagStore.items.first {
-                            let product = Products.getOne(id: firstItem.productId)
+                            let product = products.getOne(id: firstItem.productId)
 
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(product.name)
@@ -116,7 +117,7 @@ struct CheckoutScreen: View {
 
     private var formattedTotal: String {
         let total = bagStore.items.reduce(0.0) { sum, item in
-            let product = Products.getOne(id: item.productId)
+            let product = products.getOne(id: item.productId)
             return sum + (parsePrice(product.price) * Double(item.quantity))
         }
         return String(format: "US$%.2f", total)
@@ -133,4 +134,5 @@ struct CheckoutScreen: View {
 #Preview {
     CheckoutScreen()
         .environment(BagStore())
+        .environment(Products())
 }

@@ -89,6 +89,6 @@ struct ProductSheet: View {
 }
 
 #Preview {
-    ProductSheet(product: Products.getOne(id: "Nike01"), step: .constant(.options), onClose: {})
+    ProductSheet(product: Products().getOne(id: "Nike01"), step: .constant(.options), onClose: {})
         .environment(BagStore())
 }

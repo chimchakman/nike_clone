@@ -10,14 +10,15 @@ import SwiftUI
 struct ProductDetailScreen: View {
     @Environment(FavouriteStore.self) var favouriteStore: FavouriteStore
     @Environment(BagStore.self) var bagStore: BagStore
+    @Environment(ProductDetails.self) var productDetails: ProductDetails
     let product: Product
-    let productDetail: ProductDetail
+    var productDetail: ProductDetail {
+        productDetails.getOne(id: product.id)
+    }
     @State private var selectedSize: String = "M"
     init(product: Product) {
-            let detail = ProductDetails.getOne(id: product.id)
-            self.product = product
-            self.productDetail = detail
-        }
+        self.product = product
+    }
     
     
     var body: some View {
@@ -161,7 +162,8 @@ struct ProductDetailScreen: View {
 }
 
 #Preview {
-    ProductDetailScreen(product: Products.getOne(id: "Nike03"))
+    ProductDetailScreen(product: Products().getOne(id: "Nike03"))
         .environment(FavouriteStore())
         .environment(BagStore())
+        .environment(ProductDetails())
 }

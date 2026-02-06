@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ShopScreen: View {
+    @Environment(Products.self) var products: Products
 
     var body: some View {
         VStack(spacing: 0) {
@@ -20,7 +21,7 @@ struct ShopScreen: View {
                     ],
                     spacing: 18
                 ) {
-                    ForEach(Products.getAll()) { product in
+                    ForEach(products.getAll()) { product in
                         NavigationLink(value: product) {
                             ProductCard(product: product)
                         }

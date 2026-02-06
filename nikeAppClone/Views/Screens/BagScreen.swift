@@ -9,6 +9,7 @@ import SwiftUI
 
 struct BagScreen: View {
     @Environment(BagStore.self) var bagStore: BagStore
+    @Environment(Products.self) var products: Products
     @State private var showCheckout = false
 
     var body: some View {
@@ -58,7 +59,7 @@ struct BagScreen: View {
                         .padding(.bottom, 24)
 
                     ForEach(bagStore.items) { item in
-                        let product = Products.getOne(id: item.productId)
+                        let product = products.getOne(id: item.productId)
                         BagItemRow(
                             bagItem: item,
                             product: product,
@@ -180,7 +181,7 @@ struct BagScreen: View {
 
     private var formattedSubtotal: String {
         let total = bagStore.items.reduce(0.0) { sum, item in
-            let product = Products.getOne(id: item.productId)
+            let product = products.getOne(id: item.productId)
             return sum + (parsePrice(product.price) * Double(item.quantity))
         }
         return String(format: "US$%.2f", total)
@@ -198,4 +199,5 @@ struct BagScreen: View {
     BagScreen()
         .environment(BagStore())
         .environment(FavouriteStore())
+        .environment(Products())
 }

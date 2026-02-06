@@ -11,6 +11,10 @@ struct ContentView: View {
     @State private var selectedTab: Tab = .home
     @State var favouriteStore = FavouriteStore()
     @State var bagStore = BagStore()
+    @State var products = Products()
+    @State var homeProducts = HomeProducts()
+    @State var productDetails = ProductDetails()
+
     var body: some View {
         VStack(spacing: 0) {
             SelectedScreen(selectedTab: $selectedTab)
@@ -18,6 +22,9 @@ struct ContentView: View {
         }
         .environment(favouriteStore)
         .environment(bagStore)
+        .environment(products)
+        .environment(homeProducts)
+        .environment(productDetails)
     }
 }
 
