@@ -9,6 +9,7 @@ import SwiftUI
 
 struct BagScreen: View {
     @Environment(BagStore.self) var bagStore: BagStore
+    @State private var showCheckout = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -85,11 +86,19 @@ struct BagScreen: View {
 
             VStack(spacing: 0) {
                 Divider()
-                RoundedButton("Checkout", theme: .black, style: .solid, action: {})
+                RoundedButton("Checkout", theme: .black, style: .solid, action: {
+                    showCheckout = true
+                })
                     .padding(.horizontal, 24)
                     .padding(.vertical, 12)
             }
             .background(Color.white)
+            .sheet(isPresented: $showCheckout) {
+                CheckoutScreen()
+                    .environment(bagStore)
+                    .presentationDetents([.medium, .large])
+                    .presentationDragIndicator(.hidden) 
+            }
         }
     }
 
