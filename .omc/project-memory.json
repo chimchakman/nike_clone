@@ -1,0 +1,95 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1770384259387,
+  "projectRoot": "/Users/sunghyunkim/Code/Xcode/nikeAppClone",
+  "techStack": {
+    "languages": [],
+    "frameworks": [],
+    "packageManager": null,
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "nikeAppClone": {
+      "path": "nikeAppClone",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1770384259380,
+      "keyFiles": [
+        "nikeAppCloneApp.swift"
+      ]
+    },
+    "nikeAppClone.xcodeproj": {
+      "path": "nikeAppClone.xcodeproj",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1770384259380,
+      "keyFiles": [
+        "project.pbxproj"
+      ]
+    },
+    "nikeAppCloneTests": {
+      "path": "nikeAppCloneTests",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1770384259380,
+      "keyFiles": [
+        "nikeAppCloneTests.swift"
+      ]
+    },
+    "nikeAppCloneUITests": {
+      "path": "nikeAppCloneUITests",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1770384259381,
+      "keyFiles": [
+        "nikeAppCloneUITests.swift",
+        "nikeAppCloneUITestsLaunchTests.swift"
+      ]
+    },
+    "nikeAppClone/Models": {
+      "path": "nikeAppClone/Models",
+      "purpose": "Data models",
+      "fileCount": 5,
+      "lastAccessed": 1770384259381,
+      "keyFiles": [
+        "BagItem.swift",
+        "Product.swift",
+        "ProductDetail.swift"
+      ]
+    },
+    "nikeAppClone/Views": {
+      "path": "nikeAppClone/Views",
+      "purpose": "View templates",
+      "fileCount": 1,
+      "lastAccessed": 1770384259381,
+      "keyFiles": [
+        "ContentView.swift"
+      ]
+    }
+  },
+  "hotPaths": [],
+  "userDirectives": []
+}

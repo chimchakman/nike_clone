@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct HomeScreen: View {
+    @Environment(HomeProducts.self) var homeProducts: HomeProducts
+
     var body: some View {
         ScrollView (.vertical, showsIndicators: false) {
             VStack (alignment: .leading) {
@@ -44,7 +46,7 @@ struct HomeScreen: View {
                 .padding(.top, 40)
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHStack(spacing: 6) {
-                        ForEach(HomeProducts.getAll()) { product in
+                        ForEach(homeProducts.getAll()) { product in
                             ProductCardHoriontal(product: product)
                                 .frame(width: 314)
                         }

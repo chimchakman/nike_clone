@@ -9,11 +9,12 @@ import SwiftUI
 
 struct FavouritesScreen: View {
     @Environment(FavouriteStore.self) var favouriteStore: FavouriteStore
+    @Environment(Products.self) var products: Products
     @State private var selectedProduct: Product?
     @State private var sheetStep: SheetStep = .options
     @Binding var selectedTab: Tab
     private var likedProducts: [Product] {
-            Products.getAll().filter { favouriteStore.isFavourite($0.id) }
+            products.getAll().filter { favouriteStore.isFavourite($0.id) }
         }
     var body: some View {
         VStack(spacing: 0) {
