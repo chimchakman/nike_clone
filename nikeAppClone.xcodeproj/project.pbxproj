@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B19151C52F36B9A4001B3498 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = B19151C42F36B9A4001B3498 /* Supabase */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		B16A6F9D2F224EDF0013DB4A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B19151C52F36B9A4001B3498 /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = nikeAppClone;
 			packageProductDependencies = (
+				B19151C42F36B9A4001B3498 /* Supabase */,
 			);
 			productName = nikeAppClone;
 			productReference = B16A6F8F2F224EDD0013DB4A /* nikeAppClone.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = B16A6F862F224EDD0013DB4A;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B1F2B5632F36B76800BFCC28 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B16A6F902F224EDD0013DB4A /* Products */;
 			projectDirPath = "";
@@ -558,6 +567,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B1F2B5632F36B76800BFCC28 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase-community/supabase-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B19151C42F36B9A4001B3498 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B1F2B5632F36B76800BFCC28 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B16A6F872F224EDD0013DB4A /* Project object */;
 }

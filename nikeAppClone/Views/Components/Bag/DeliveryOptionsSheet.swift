@@ -9,7 +9,11 @@ import SwiftUI
 
 struct DeliveryOptionsSheet: View {
     @Environment(\.dismiss) var dismiss
+    var onAddressSelected: ((Address) -> Void)?
+
     @State private var selectedOption: DeliveryOption = .freeDelivery
+    @State private var showAddAddressSheet = false
+    @State private var deliveryAddress: Address? = nil
 
     enum DeliveryOption {
         case freeDelivery
@@ -63,24 +67,59 @@ struct DeliveryOptionsSheet: View {
                         .padding(.top, 24)
                         .padding(.bottom, 16)
 
-                    // Enter Delivery Address
-                    HStack(spacing: 12) {
-                        Image(systemName: "exclamationmark.triangle.fill")
-                            .font(.system(size: 16))
-                            .foregroundStyle(.red)
+                    // Delivery Address Display
+                    if let address = deliveryAddress {
+                        // Show address with checkmark
+                        HStack(alignment: .top, spacing: 12) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 20))
+                                .foregroundStyle(.black)
 
-                        Text("Enter Delivery Address")
-                            .font(.system(size: 16))
-                            .foregroundStyle(.red)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("\(address.fullName), \(address.phoneNumber)")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundStyle(.black)
 
-                        Spacer()
+                                Text(address.formattedAddress)
+                                    .font(.system(size: 14))
+                                    .foregroundStyle(.secondary)
+                            }
 
-                        Text("Edit")
-                            .font(.system(size: 16))
-                            .foregroundStyle(.black)
+                            Spacer()
+
+                            Button {
+                                showAddAddressSheet = true
+                            } label: {
+                                Text("Edit")
+                                    .font(.system(size: 16))
+                                    .foregroundStyle(.black)
+                            }
+                        }
+                        .padding(.horizontal, 24)
+                        .padding(.bottom, 32)
+                    } else {
+                        // Show warning to enter address
+                        HStack(spacing: 12) {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .font(.system(size: 16))
+                                .foregroundStyle(.red)
+
+                            Text("Enter Delivery Address")
+                                .font(.system(size: 16))
+                                .foregroundStyle(.red)
+
+                            Spacer()
+                            Button {
+                                showAddAddressSheet = true
+                            } label: {
+                                Text("Edit")
+                                    .font(.system(size: 16))
+                                    .foregroundStyle(.black)
+                            }
+                        }
+                        .padding(.horizontal, 24)
+                        .padding(.bottom, 32)
                     }
-                    .padding(.horizontal, 24)
-                    .padding(.bottom, 32)
                 }
             }
 
@@ -93,6 +132,9 @@ struct DeliveryOptionsSheet: View {
                     theme: .black,
                     style: .solid,
                     action: {
+                        if let address = deliveryAddress {
+                            onAddressSelected?(address)
+                        }
                         dismiss()
                     }
                 )
@@ -100,16 +142,21 @@ struct DeliveryOptionsSheet: View {
 
                 RoundedButton(
                     "Add Address",
-                    theme: .white,
+                    theme: .black,
                     style: .outline,
                     action: {
-                        // TODO: Handle add address
+                        showAddAddressSheet = true
                     }
                 )
                 .padding(.horizontal, 24)
                 .padding(.bottom, 12)
             }
             .background(Color.white)
+        }
+        .sheet(isPresented: $showAddAddressSheet) {
+            AddAddressSheet { address in
+                deliveryAddress = address
+            }
         }
     }
 
@@ -141,6 +188,8 @@ struct DeliveryOptionsSheet: View {
                             Text(subtitle)
                                 .font(.system(size: 14))
                                 .foregroundStyle(.secondary)
+                            
+                            Spacer()
 
                             Text("More Options")
                                 .font(.system(size: 14))

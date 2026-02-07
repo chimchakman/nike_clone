@@ -12,10 +12,20 @@ struct CheckoutScreen: View {
     @Environment(BagStore.self) var bagStore: BagStore
     @Environment(Products.self) var products: Products
     @State private var showDeliveryOptions = false
+    @State private var deliveryAddress: Address? = nil
+    @State private var showPaymentOptions = false
+    @State private var selectedPaymentCard: PaymentCard? = nil
+    @State private var showPaymentSuccess = false
+    @State private var showOrderConfirmation = false
+
+    private var isCheckoutReady: Bool {
+        deliveryAddress != nil && selectedPaymentCard != nil
+    }
 
     var body: some View {
-        NavigationView {
-            VStack(spacing: 0) {
+        ZStack {
+            NavigationView {
+                VStack(spacing: 0) {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
                         // Product Header
@@ -41,8 +51,9 @@ struct CheckoutScreen: View {
                         VStack(spacing: 0) {
                             CheckoutExpandableRow(
                                 title: "Delivery",
-                                actionText: "Select Delivery",
-                                actionColor: .red,
+                                actionText: deliveryAddress != nil ? "Free Delivery" : "Select Delivery",
+                                actionColor: deliveryAddress != nil ? .secondary : .red,
+                                subtitle: deliveryAddress != nil ? "Arrives by Tue, 10 May" : nil,
                                 onTap: {
                                     showDeliveryOptions = true
                                 }
@@ -50,10 +61,10 @@ struct CheckoutScreen: View {
 
                             CheckoutExpandableRow(
                                 title: "Payment",
-                                actionText: "Select Payment",
-                                actionColor: .red,
+                                actionText: selectedPaymentCard != nil ? selectedPaymentCard!.maskedCardNumber : "Select Payment",
+                                actionColor: selectedPaymentCard != nil ? .black : .red,
                                 onTap: {
-                                    // TODO: Show payment options
+                                    showPaymentOptions = true
                                 }
                             )
 
@@ -90,27 +101,72 @@ struct CheckoutScreen: View {
                 VStack(spacing: 0) {
                     Divider()
 
-                    RoundedButton(
-                        "Submit Payment",
-                        theme: .black,
-                        style: .outline,
-                        action: {
-                            // TODO: Handle payment submission
-                            dismiss()
+                    Button(action: {
+                        if isCheckoutReady {
+                            showPaymentSuccess = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                showPaymentSuccess = false
+                                showOrderConfirmation = true
+                            }
                         }
-                    )
+                    }) {
+                        Text("Submit Payment")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundStyle(isCheckoutReady ? .white : Color(white: 0.46))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(isCheckoutReady ? Color.black : Color(white: 0.96))
+                            .clipShape(RoundedRectangle(cornerRadius: 100))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 100)
+                                    .stroke(isCheckoutReady ? Color.black : Color(white: 0.96), lineWidth: 1)
+                            )
+                    }
+                    .disabled(!isCheckoutReady)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 12)
                 }
                 .background(Color.white)
+                }
+                .navigationBarTitleDisplayMode(.inline)
             }
-            .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $showDeliveryOptions) {
-                DeliveryOptionsSheet()
-                    .presentationDetents([.fraction(0.75), .large])
-                    .presentationDragIndicator(.visible)
+                DeliveryOptionsSheet(
+                    onAddressSelected: { address in
+                        deliveryAddress = address
+                    }
+                )
+                .presentationDetents([.fraction(0.75), .large])
+                .presentationDragIndicator(.visible)
+            }
+            .sheet(isPresented: $showPaymentOptions) {
+                PaymentOptionsSheet(
+                    onPaymentSelected: { card in
+                        selectedPaymentCard = card
+                    }
+                )
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+            }
+            .fullScreenCover(isPresented: $showOrderConfirmation) {
+                if let address = deliveryAddress, let card = selectedPaymentCard {
+                    OrderConfirmationScreen(
+                        deliveryAddress: address,
+                        paymentCard: card
+                    )
+                    .environment(bagStore)
+                    .environment(products)
+                }
+            }
+
+            // Payment Success Overlay with Custom Transition
+            if showPaymentSuccess {
+                PaymentSuccessView()
+                    .transition(.scale.combined(with: .opacity))
+                    .zIndex(1)
             }
         }
+        .animation(.spring(response: 0.4, dampingFraction: 0.7), value: showPaymentSuccess)
     }
 
     // MARK: - Price Calculation

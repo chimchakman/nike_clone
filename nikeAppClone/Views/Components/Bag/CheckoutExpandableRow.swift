@@ -11,20 +11,45 @@ struct CheckoutExpandableRow: View {
     let title: String
     let actionText: String
     let actionColor: Color
+    let subtitle: String?
     let onTap: () -> Void
+
+    init(
+        title: String,
+        actionText: String,
+        actionColor: Color = .black,
+        subtitle: String? = nil,
+        onTap: @escaping () -> Void
+    ) {
+        self.title = title
+        self.actionText = actionText
+        self.actionColor = actionColor
+        self.subtitle = subtitle
+        self.onTap = onTap
+    }
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
+            HStack(alignment: .top) {
                 Text(title)
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundStyle(.black)
 
                 Spacer()
 
-                Text(actionText)
-                    .font(.system(size: 16))
-                    .foregroundStyle(actionColor)
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text(actionText)
+                        .font(.system(size: 16))
+                        .foregroundStyle(actionColor)
+                        .multilineTextAlignment(.trailing)
+
+                    if let subtitle = subtitle {
+                        Text(subtitle)
+                            .font(.system(size: 16))
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.trailing)
+                    }
+                }
 
                 Image(systemName: "plus")
                     .font(.system(size: 16, weight: .medium))
