@@ -3,6 +3,7 @@ import SwiftUI
 struct LoginScreen: View {
     @State private var showAlert = false
     @State private var showSignUpForm = false
+    @State private var showSignInForm = false
 
     var body: some View {
         NavigationStack {
@@ -42,7 +43,11 @@ struct LoginScreen: View {
             }
             .sheet(isPresented: $showSignUpForm) {
                 SignUpFormScreen()
-                    .presentationDetents([.large])
+                    .presentationDetents([.large], selection: .constant(.large))
+            }
+            .sheet(isPresented: $showSignInForm) {
+                SignInFormScreen(isPresented: $showSignInForm)
+                    .presentationDetents([.large], selection: .constant(.large))
             }
         }
     }
@@ -125,7 +130,7 @@ struct LoginScreen: View {
 
             // Sign In button
             Button {
-                // Handle sign in action
+                showSignInForm = true
             } label: {
                 Text("Sign In")
                     .font(.system(size: 16, weight: .medium))

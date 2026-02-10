@@ -10,7 +10,6 @@ import SwiftUI
 struct SignUpDetailsScreen: View {
     let email: String
 
-    @State private var code: String = ""
     @State private var firstName: String = ""
     @State private var surname: String = ""
     @State private var password: String = ""
@@ -19,10 +18,13 @@ struct SignUpDetailsScreen: View {
     @State private var showDatePicker: Bool = false
     @State private var emailUpdates: Bool = false
     @State private var agreeToTerms: Bool = false
-    @State private var resendTimer: Int = 28
     @State private var showSuccessScreen = false
+    @State private var isLoading = false
+    @State private var errorMessage: String?
+    @State private var showError = false
 
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var auth: AuthState
 
     // Password validation
     private var isPasswordLengthValid: Bool {
@@ -37,7 +39,6 @@ struct SignUpDetailsScreen: View {
     }
 
     private var isFormValid: Bool {
-        !code.isEmpty &&
         !firstName.isEmpty &&
         !surname.isEmpty &&
         isPasswordLengthValid &&
@@ -89,6 +90,12 @@ struct SignUpDetailsScreen: View {
                 SignUpSuccessScreen()
                     .navigationBarBackButtonHidden()
             }
+            .alert("Error", isPresented: $showError) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(errorMessage ?? "An unknown error occurred")
+            }
+            .disabled(isLoading)
         }
     }
 
@@ -158,7 +165,7 @@ struct SignUpDetailsScreen: View {
             // Email confirmation with Edit button
             VStack(alignment: .leading, spacing: 12) {
                 HStack(spacing: 4) {
-                    Text("We've sent a code to")
+                    Text("Creating account for")
                         .font(.system(size: 16))
                         .foregroundColor(Color(red: 118/255, green: 118/255, blue: 118/255))
 
@@ -176,34 +183,6 @@ struct SignUpDetailsScreen: View {
                             .underline()
                     }
                 }
-
-                // Code input field with refresh icon
-                HStack {
-                    TextField("Code", text: $code)
-                        .font(.system(size: 16))
-                        .foregroundColor(.black)
-
-                    Button {
-                        // Resend code action
-                        // TODO: Implement code resend with Supabase
-                        resendTimer = 28
-                    } label: {
-                        Image(systemName: "arrow.clockwise")
-                            .font(.system(size: 16))
-                            .foregroundColor(Color(red: 118/255, green: 118/255, blue: 118/255))
-                    }
-                }
-                .padding(.horizontal, 16)
-                .frame(height: 54)
-                .background(
-                    RoundedRectangle(cornerRadius: 6)
-                        .stroke(Color(red: 118/255, green: 118/255, blue: 118/255), lineWidth: 1)
-                )
-
-                // Resend timer
-                Text("Resend in \(resendTimer)")
-                    .font(.system(size: 12))
-                    .foregroundColor(Color(red: 118/255, green: 118/255, blue: 118/255))
             }
 
             // First name and Surname side by side
@@ -400,9 +379,16 @@ struct SignUpDetailsScreen: View {
             }
 
             // Create Account button
-            RoundedButton("Create Account", theme: .black, disabled: !isFormValid, action: {
-                showSuccessScreen = true
-            })
+            RoundedButton(
+                isLoading ? "Creating Account..." : "Create Account",
+                theme: .black,
+                disabled: !isFormValid || isLoading,
+                action: {
+                    Task {
+                        await createAccount()
+                    }
+                }
+            )
         }
     }
 
@@ -463,6 +449,50 @@ struct SignUpDetailsScreen: View {
                 .frame(width: 135, height: 5)
                 .padding(.top, 8)
                 .padding(.bottom, 8)
+        }
+    }
+
+    // MARK: - Actions
+
+    private func createAccount() async {
+        isLoading = true
+        errorMessage = nil
+
+        do {
+            // Step 1: Sign up the user with email and password
+            let userId = try await AuthService.shared.signUp(
+                email: email,
+                password: password
+            )
+
+            // Step 2: Create the user profile
+            try await ProfileService.shared.createProfile(
+                userId: userId,
+                firstName: firstName,
+                surname: surname,
+                dateOfBirth: dateOfBirth,
+                emailUpdates: emailUpdates
+            )
+
+            // Success - trigger authentication state before navigation
+            await MainActor.run {
+                isLoading = false
+                auth.loginSucceeded()
+                showSuccessScreen = true
+            }
+
+        } catch let error as AuthError {
+            isLoading = false
+            errorMessage = error.localizedDescription
+            showError = true
+        } catch let error as ProfileError {
+            isLoading = false
+            errorMessage = error.localizedDescription
+            showError = true
+        } catch {
+            isLoading = false
+            errorMessage = "An unexpected error occurred: \(error.localizedDescription)"
+            showError = true
         }
     }
 }

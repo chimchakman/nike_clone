@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1770509400459,
+  "lastScanned": 1770705737998,
   "projectRoot": "/Users/sunghyunkim/Code/Xcode/nikeAppClone",
   "techStack": {
     "languages": [],
@@ -36,7 +36,7 @@
       "path": "nikeAppClone",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1770509400454,
+      "lastAccessed": 1770705737994,
       "keyFiles": [
         "Supabase.swift",
         "nikeAppCloneApp.swift"
@@ -46,7 +46,7 @@
       "path": "nikeAppClone.xcodeproj",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1770509400454,
+      "lastAccessed": 1770705737994,
       "keyFiles": [
         "project.pbxproj"
       ]
@@ -55,7 +55,7 @@
       "path": "nikeAppCloneTests",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1770509400454,
+      "lastAccessed": 1770705737994,
       "keyFiles": [
         "nikeAppCloneTests.swift"
       ]
@@ -64,7 +64,7 @@
       "path": "nikeAppCloneUITests",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1770509400454,
+      "lastAccessed": 1770705737994,
       "keyFiles": [
         "nikeAppCloneUITests.swift",
         "nikeAppCloneUITestsLaunchTests.swift"
@@ -74,7 +74,7 @@
       "path": "nikeAppClone/Models",
       "purpose": "Data models",
       "fileCount": 7,
-      "lastAccessed": 1770509400455,
+      "lastAccessed": 1770705737994,
       "keyFiles": [
         "Address.swift",
         "BagItem.swift",
@@ -84,10 +84,11 @@
     "nikeAppClone/Views": {
       "path": "nikeAppClone/Views",
       "purpose": "View templates",
-      "fileCount": 1,
-      "lastAccessed": 1770509400455,
+      "fileCount": 2,
+      "lastAccessed": 1770705737995,
       "keyFiles": [
-        "ContentView.swift"
+        "ContentView.swift",
+        "RootView.swift"
       ]
     }
   },
