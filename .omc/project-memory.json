@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1770384259387,
+  "lastScanned": 1770705737998,
   "projectRoot": "/Users/sunghyunkim/Code/Xcode/nikeAppClone",
   "techStack": {
     "languages": [],
@@ -35,9 +35,10 @@
     "nikeAppClone": {
       "path": "nikeAppClone",
       "purpose": null,
-      "fileCount": 1,
-      "lastAccessed": 1770384259380,
+      "fileCount": 2,
+      "lastAccessed": 1770705737994,
       "keyFiles": [
+        "Supabase.swift",
         "nikeAppCloneApp.swift"
       ]
     },
@@ -45,7 +46,7 @@
       "path": "nikeAppClone.xcodeproj",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1770384259380,
+      "lastAccessed": 1770705737994,
       "keyFiles": [
         "project.pbxproj"
       ]
@@ -54,7 +55,7 @@
       "path": "nikeAppCloneTests",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1770384259380,
+      "lastAccessed": 1770705737994,
       "keyFiles": [
         "nikeAppCloneTests.swift"
       ]
@@ -63,7 +64,7 @@
       "path": "nikeAppCloneUITests",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1770384259381,
+      "lastAccessed": 1770705737994,
       "keyFiles": [
         "nikeAppCloneUITests.swift",
         "nikeAppCloneUITestsLaunchTests.swift"
@@ -72,21 +73,22 @@
     "nikeAppClone/Models": {
       "path": "nikeAppClone/Models",
       "purpose": "Data models",
-      "fileCount": 5,
-      "lastAccessed": 1770384259381,
+      "fileCount": 7,
+      "lastAccessed": 1770705737994,
       "keyFiles": [
+        "Address.swift",
         "BagItem.swift",
-        "Product.swift",
-        "ProductDetail.swift"
+        "PaymentCard.swift"
       ]
     },
     "nikeAppClone/Views": {
       "path": "nikeAppClone/Views",
       "purpose": "View templates",
-      "fileCount": 1,
-      "lastAccessed": 1770384259381,
+      "fileCount": 2,
+      "lastAccessed": 1770705737995,
       "keyFiles": [
-        "ContentView.swift"
+        "ContentView.swift",
+        "RootView.swift"
       ]
     }
   },
