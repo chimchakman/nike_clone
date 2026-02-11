@@ -1,4 +1,14 @@
-# Xcode user-specific files
-xcuserdata/
-*.xcuserstate
+# macOS
+.DS_Store
 
+# Xcode user / cache
+*.xcuserdata
+*.xcuserstate
+DerivedData/
+.omc
+
+# Build
+build/
+
+# Swift Package
+.swiftpm/
