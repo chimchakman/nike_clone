@@ -17,7 +17,7 @@ struct SignInPasswordScreen: View {
     @State private var showError: Bool = false
     @State private var errorMessage: String = ""
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var auth: AuthState
+    @Environment(\.authState) private var auth
 
     var body: some View {
         ZStack {

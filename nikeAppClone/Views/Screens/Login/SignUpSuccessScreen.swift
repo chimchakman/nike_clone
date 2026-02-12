@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SignUpSuccessScreen: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var auth: AuthState
+    @Environment(\.authState) private var auth
 
     var body: some View {
         ZStack {

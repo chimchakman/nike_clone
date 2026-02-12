@@ -24,7 +24,7 @@ struct SignUpDetailsScreen: View {
     @State private var showError = false
 
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var auth: AuthState
+    @Environment(\.authState) private var auth
 
     // Password validation
     private var isPasswordLengthValid: Bool {

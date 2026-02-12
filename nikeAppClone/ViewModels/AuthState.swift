@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import Observation
 
 @MainActor
-final class AuthState: ObservableObject {
-    @Published var isLoggedIn: Bool = false
+@Observable
+final class AuthState {
+    var isLoggedIn: Bool = false
 
     func loginSucceeded() {
         isLoggedIn = true
@@ -17,5 +19,17 @@ final class AuthState: ObservableObject {
 
     func logout() {
         isLoggedIn = false
+    }
+}
+
+// Environment key for AuthState
+struct AuthStateKey: EnvironmentKey {
+    @MainActor static let defaultValue = AuthState()
+}
+
+extension EnvironmentValues {
+    var authState: AuthState {
+        get { self[AuthStateKey.self] }
+        set { self[AuthStateKey.self] = newValue }
     }
 }
