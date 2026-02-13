@@ -123,7 +123,7 @@ struct BagScreen: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(white: 0.96))
+        .background(Color.lightGray96)
         .cornerRadius(12)
     }
 

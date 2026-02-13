@@ -68,7 +68,7 @@ struct SignUpFormScreen: View {
                 } label: {
                     Text("Cancel")
                         .font(.system(size: 17, weight: .regular))
-                        .foregroundColor(Color(red: 0, green: 122/255, blue: 1))
+                        .foregroundColor(Color.linkBlue)
                         .tracking(-0.408)
                 }
 
@@ -88,14 +88,14 @@ struct SignUpFormScreen: View {
                 } label: {
                     Image(systemName: "arrow.clockwise")
                         .font(.system(size: 17, weight: .medium))
-                        .foregroundColor(Color(red: 0, green: 122/255, blue: 1))
+                        .foregroundColor(Color.linkBlue)
                         .frame(width: 24, height: 24)
                 }
             }
             .frame(height: 58)
             .padding(.horizontal, 16)
             .background(
-                Color(red: 249/255, green: 249/255, blue: 249/255, opacity: 0.94)
+                Color.screenBackgroundTranslucent
                     .blur(radius: 10)
             )
             .overlay(
@@ -123,7 +123,7 @@ struct SignUpFormScreen: View {
             HStack(spacing: 0) {
                 Text("United States")
                     .font(.system(size: 16))
-                    .foregroundColor(Color(red: 118/255, green: 118/255, blue: 118/255))
+                    .foregroundColor(Color.textGray)
 
                 Spacer()
 
@@ -147,7 +147,7 @@ struct SignUpFormScreen: View {
                 .frame(height: 54)
                 .background(
                     RoundedRectangle(cornerRadius: 6)
-                        .stroke(Color(red: 118/255, green: 118/255, blue: 118/255), lineWidth: 1)
+                        .stroke(Color.textGray, lineWidth: 1)
                 )
                 .disableAutocorrection(true)
                 .textContentType(.emailAddress)
@@ -157,7 +157,7 @@ struct SignUpFormScreen: View {
                 HStack(spacing: 4) {
                     Text("By continuing, I agree to Nike's")
                         .font(.system(size: 16))
-                        .foregroundColor(Color(red: 118/255, green: 118/255, blue: 118/255))
+                        .foregroundColor(Color.textGray)
 
                     Button {
                         // Open privacy policy
@@ -165,7 +165,7 @@ struct SignUpFormScreen: View {
                     } label: {
                         Text("Privacy Policy")
                             .font(.system(size: 16))
-                            .foregroundColor(Color(red: 118/255, green: 118/255, blue: 118/255))
+                            .foregroundColor(Color.textGray)
                             .underline()
                     }
                 }
@@ -173,7 +173,7 @@ struct SignUpFormScreen: View {
                 HStack(spacing: 4) {
                     Text("and")
                         .font(.system(size: 16))
-                        .foregroundColor(Color(red: 118/255, green: 118/255, blue: 118/255))
+                        .foregroundColor(Color.textGray)
 
                     Button {
                         // Open terms of use
@@ -181,7 +181,7 @@ struct SignUpFormScreen: View {
                     } label: {
                         Text("Terms of Use.")
                             .font(.system(size: 16))
-                            .foregroundColor(Color(red: 118/255, green: 118/255, blue: 118/255))
+                            .foregroundColor(Color.textGray)
                             .underline()
                     }
                 }

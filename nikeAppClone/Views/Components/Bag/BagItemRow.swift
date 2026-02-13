@@ -23,7 +23,7 @@ struct BagItemRow: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 150, height: 150)
-                        .background(Color(white: 0.96))
+                        .background(Color.lightGray96)
 
                     // Image page dots
                     HStack(spacing: 4) {

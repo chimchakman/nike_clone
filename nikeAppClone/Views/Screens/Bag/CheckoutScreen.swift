@@ -112,14 +112,14 @@ struct CheckoutScreen: View {
                     }) {
                         Text("Submit Payment")
                             .font(.system(size: 16, weight: .medium))
-                            .foregroundStyle(isCheckoutReady ? .white : Color(white: 0.46))
+                            .foregroundStyle(isCheckoutReady ? .white : Color.mediumGray)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
-                            .background(isCheckoutReady ? Color.black : Color(white: 0.96))
+                            .background(isCheckoutReady ? Color.black : Color.lightGray96)
                             .clipShape(RoundedRectangle(cornerRadius: 100))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 100)
-                                    .stroke(isCheckoutReady ? Color.black : Color(white: 0.96), lineWidth: 1)
+                                    .stroke(isCheckoutReady ? Color.black : Color.lightGray96, lineWidth: 1)
                             )
                     }
                     .disabled(!isCheckoutReady)

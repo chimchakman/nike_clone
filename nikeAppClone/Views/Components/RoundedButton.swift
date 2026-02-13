@@ -198,5 +198,5 @@ struct RoundedButton: View {
         RoundedButton("Join Us", icon: .right(name: "like"), theme: .black, style: .outline, disabled: true) { }
     }
     .padding()
-    .background(Color(white: 0.95))
+    .background(Color.lightGray95)
 }

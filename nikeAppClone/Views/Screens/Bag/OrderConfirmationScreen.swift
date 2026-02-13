@@ -131,11 +131,11 @@ struct OrderConfirmationScreen: View {
                             // Mastercard Logo
                             HStack(spacing: -4) {
                                 Circle()
-                                    .fill(Color(red: 0.92, green: 0.15, blue: 0.15))
+                                    .fill(Color.cardRed)
                                     .frame(width: 16, height: 16)
 
                                 Circle()
-                                    .fill(Color(red: 0.98, green: 0.56, blue: 0.09))
+                                    .fill(Color.cardOrange)
                                     .frame(width: 16, height: 16)
                             }
                         }
@@ -213,7 +213,7 @@ struct OrderConfirmationScreen: View {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Arrives by Tue, 10 May")
                                     .font(.system(size: 12))
-                                    .foregroundStyle(Color(red: 0.13, green: 0.55, blue: 0.13))
+                                    .foregroundStyle(Color.successGreen)
 
                                 Text(product.name)
                                     .font(.system(size: 14, weight: .medium))
@@ -264,7 +264,7 @@ struct OrderConfirmationScreen: View {
                         .padding(.vertical, 16)
                         .overlay(
                             RoundedRectangle(cornerRadius: 100)
-                                .stroke(Color(white: 0.9), lineWidth: 1)
+                                .stroke(Color.lightGray90, lineWidth: 1)
                         )
                 }
             }

@@ -58,7 +58,7 @@ struct AddAddressSheet: View {
             .background(Color.white)
             .overlay(
                 Rectangle()
-                    .fill(Color(hex: "E4E4E4"))
+                    .fill(Color.inputBackground)
                     .frame(height: 1),
                 alignment: .bottom
             )
@@ -97,19 +97,19 @@ struct AddAddressSheet: View {
                                 Text(selectedCountry)
                                     .font(.system(size: 14, weight: .regular))
                                     .tracking(-0.14)
-                                    .foregroundStyle(selectedCountry == "Country" ? Color(hex: "BABABA") : .black)
+                                    .foregroundStyle(selectedCountry == "Country" ? Color.placeholder : .black)
                                     .frame(maxWidth: .infinity, alignment: .leading)
 
                                 Image(systemName: "chevron.down")
                                     .font(.system(size: 10, weight: .medium))
-                                    .foregroundStyle(Color(hex: "BABABA"))
+                                    .foregroundStyle(Color.placeholder)
                             }
                             .padding(.horizontal, 10)
                             .padding(.vertical, 15)
                             .frame(width: 120)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 2)
-                                    .stroke(Color(hex: "CDCDCD"), lineWidth: 1)
+                                    .stroke(Color.border, lineWidth: 1)
                             )
                         }
                     }
@@ -129,7 +129,7 @@ struct AddAddressSheet: View {
                     .padding(.vertical, 15)
                     .overlay(
                         RoundedRectangle(cornerRadius: 2)
-                            .stroke(Color(hex: "CDCDCD"), lineWidth: 1)
+                            .stroke(Color.border, lineWidth: 1)
                     )
                 }
                 .padding(.horizontal, 20)
@@ -155,14 +155,14 @@ struct AddAddressSheet: View {
                 }) {
                     Text("Add Delivery Address")
                         .font(.system(size: 16, weight: .medium))
-                        .foregroundStyle(isFormValid ? .white : Color(hex: "767676"))
+                        .foregroundStyle(isFormValid ? .white : Color.disabledText)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(isFormValid ? .black : Color(hex: "F6F6F6"))
+                        .background(isFormValid ? .black : Color.disabledBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 100))
                         .overlay(
                             RoundedRectangle(cornerRadius: 100)
-                                .stroke(isFormValid ? .black : Color(hex: "F6F6F6"), lineWidth: 1)
+                                .stroke(isFormValid ? .black : Color.disabledBackground, lineWidth: 1)
                         )
                 }
                 .disabled(!isFormValid)
@@ -198,7 +198,7 @@ struct FormInputField: View {
                 Text(placeholder)
                     .font(.system(size: 14, weight: .regular))
                     .tracking(-0.14)
-                    .foregroundStyle(Color(hex: "BABABA"))
+                    .foregroundStyle(Color.placeholder)
             }
             .font(.system(size: 14, weight: .regular))
             .tracking(-0.14)
@@ -207,7 +207,7 @@ struct FormInputField: View {
             .padding(.vertical, 15)
             .overlay(
                 RoundedRectangle(cornerRadius: 2)
-                    .stroke(Color(hex: "CDCDCD"), lineWidth: 1)
+                    .stroke(Color.border, lineWidth: 1)
             )
     }
 }
@@ -224,34 +224,6 @@ extension View {
             placeholder().opacity(shouldShow ? 1 : 0)
             self
         }
-    }
-}
-
-// MARK: - Color Extension for Hex
-
-extension Color {
-    init(hex: String) {
-        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
-        var int: UInt64 = 0
-        Scanner(string: hex).scanHexInt64(&int)
-        let a, r, g, b: UInt64
-        switch hex.count {
-        case 3: // RGB (12-bit)
-            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-        case 6: // RGB (24-bit)
-            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-        case 8: // ARGB (32-bit)
-            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-        default:
-            (a, r, g, b) = (255, 0, 0, 0)
-        }
-        self.init(
-            .sRGB,
-            red: Double(r) / 255,
-            green: Double(g) / 255,
-            blue:  Double(b) / 255,
-            opacity: Double(a) / 255
-        )
     }
 }
 

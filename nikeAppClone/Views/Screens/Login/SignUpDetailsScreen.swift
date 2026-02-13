@@ -111,7 +111,7 @@ struct SignUpDetailsScreen: View {
                 } label: {
                     Text("Cancel")
                         .font(.system(size: 17, weight: .regular))
-                        .foregroundColor(Color(red: 0, green: 122/255, blue: 1))
+                        .foregroundColor(Color.linkBlue)
                         .tracking(-0.408)
                 }
 
@@ -131,14 +131,14 @@ struct SignUpDetailsScreen: View {
                 } label: {
                     Image(systemName: "arrow.clockwise")
                         .font(.system(size: 17, weight: .medium))
-                        .foregroundColor(Color(red: 0, green: 122/255, blue: 1))
+                        .foregroundColor(Color.linkBlue)
                         .frame(width: 24, height: 24)
                 }
             }
             .frame(height: 58)
             .padding(.horizontal, 16)
             .background(
-                Color(red: 249/255, green: 249/255, blue: 249/255, opacity: 0.94)
+                Color.screenBackgroundTranslucent
                     .blur(radius: 10)
             )
             .overlay(
@@ -167,11 +167,11 @@ struct SignUpDetailsScreen: View {
                 HStack(spacing: 4) {
                     Text("Creating account for")
                         .font(.system(size: 16))
-                        .foregroundColor(Color(red: 118/255, green: 118/255, blue: 118/255))
+                        .foregroundColor(Color.textGray)
 
                     Text(email)
                         .font(.system(size: 16))
-                        .foregroundColor(Color(red: 118/255, green: 118/255, blue: 118/255))
+                        .foregroundColor(Color.textGray)
 
                     Button {
                         // Edit email action
@@ -194,7 +194,7 @@ struct SignUpDetailsScreen: View {
                     .frame(height: 54)
                     .background(
                         RoundedRectangle(cornerRadius: 6)
-                            .stroke(Color(red: 118/255, green: 118/255, blue: 118/255), lineWidth: 1)
+                            .stroke(Color.textGray, lineWidth: 1)
                     )
                     .textContentType(.givenName)
 
@@ -205,7 +205,7 @@ struct SignUpDetailsScreen: View {
                     .frame(height: 54)
                     .background(
                         RoundedRectangle(cornerRadius: 6)
-                            .stroke(Color(red: 118/255, green: 118/255, blue: 118/255), lineWidth: 1)
+                            .stroke(Color.textGray, lineWidth: 1)
                     )
                     .textContentType(.familyName)
             }
@@ -230,14 +230,14 @@ struct SignUpDetailsScreen: View {
                     } label: {
                         Image(systemName: showPassword ? "eye.slash.fill" : "eye.fill")
                             .font(.system(size: 16))
-                            .foregroundColor(Color(red: 118/255, green: 118/255, blue: 118/255))
+                            .foregroundColor(Color.textGray)
                     }
                 }
                 .padding(.horizontal, 16)
                 .frame(height: 54)
                 .background(
                     RoundedRectangle(cornerRadius: 6)
-                        .stroke(Color(red: 118/255, green: 118/255, blue: 118/255), lineWidth: 1)
+                        .stroke(Color.textGray, lineWidth: 1)
                 )
 
                 // Password validation indicators
@@ -245,21 +245,21 @@ struct SignUpDetailsScreen: View {
                     HStack(spacing: 8) {
                         Image(systemName: isPasswordLengthValid ? "checkmark" : "xmark")
                             .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(isPasswordLengthValid ? .green : Color(red: 118/255, green: 118/255, blue: 118/255))
+                            .foregroundColor(isPasswordLengthValid ? .green : Color.textGray)
 
                         Text("Minimum of 8 characters")
                             .font(.system(size: 12))
-                            .foregroundColor(isPasswordLengthValid ? .green : Color(red: 118/255, green: 118/255, blue: 118/255))
+                            .foregroundColor(isPasswordLengthValid ? .green : Color.textGray)
                     }
 
                     HStack(spacing: 8) {
                         Image(systemName: isPasswordComplexityValid ? "checkmark" : "xmark")
                             .font(.system(size: 12, weight: .medium))
-                            .foregroundColor(isPasswordComplexityValid ? .green : Color(red: 118/255, green: 118/255, blue: 118/255))
+                            .foregroundColor(isPasswordComplexityValid ? .green : Color.textGray)
 
                         Text("Uppercase, lowercase letters and one number")
                             .font(.system(size: 12))
-                            .foregroundColor(isPasswordComplexityValid ? .green : Color(red: 118/255, green: 118/255, blue: 118/255))
+                            .foregroundColor(isPasswordComplexityValid ? .green : Color.textGray)
                     }
                 }
             }
@@ -278,19 +278,19 @@ struct SignUpDetailsScreen: View {
 
                         Image(systemName: "calendar")
                             .font(.system(size: 16))
-                            .foregroundColor(Color(red: 118/255, green: 118/255, blue: 118/255))
+                            .foregroundColor(Color.textGray)
                     }
                     .padding(.horizontal, 16)
                     .frame(height: 54)
                     .background(
                         RoundedRectangle(cornerRadius: 6)
-                            .stroke(Color(red: 118/255, green: 118/255, blue: 118/255), lineWidth: 1)
+                            .stroke(Color.textGray, lineWidth: 1)
                     )
                 }
 
                 Text("Get a Nike Member Reward on your birthday.")
                     .font(.system(size: 12))
-                    .foregroundColor(Color(red: 118/255, green: 118/255, blue: 118/255))
+                    .foregroundColor(Color.textGray)
             }
 
             // Checkboxes
@@ -301,7 +301,7 @@ struct SignUpDetailsScreen: View {
                         emailUpdates.toggle()
                     } label: {
                         RoundedRectangle(cornerRadius: 6)
-                            .strokeBorder(Color(red: 205/255, green: 205/255, blue: 205/255), lineWidth: 1.5)
+                            .strokeBorder(Color.strokeGray, lineWidth: 1.5)
                             .background(
                                 RoundedRectangle(cornerRadius: 6)
                                     .fill(Color.white)
@@ -327,7 +327,7 @@ struct SignUpDetailsScreen: View {
                         agreeToTerms.toggle()
                     } label: {
                         RoundedRectangle(cornerRadius: 6)
-                            .strokeBorder(Color(red: 205/255, green: 205/255, blue: 205/255), lineWidth: 1.5)
+                            .strokeBorder(Color.strokeGray, lineWidth: 1.5)
                             .background(
                                 RoundedRectangle(cornerRadius: 6)
                                     .fill(Color.white)
@@ -403,7 +403,7 @@ struct SignUpDetailsScreen: View {
                 } label: {
                     Text("Cancel")
                         .font(.system(size: 17))
-                        .foregroundColor(Color(red: 0, green: 122/255, blue: 1))
+                        .foregroundColor(Color.linkBlue)
                 }
 
                 Spacer()
@@ -418,11 +418,11 @@ struct SignUpDetailsScreen: View {
                 } label: {
                     Text("Done")
                         .font(.system(size: 17, weight: .semibold))
-                        .foregroundColor(Color(red: 0, green: 122/255, blue: 1))
+                        .foregroundColor(Color.linkBlue)
                 }
             }
             .padding()
-            .background(Color(red: 249/255, green: 249/255, blue: 249/255))
+            .background(Color.screenBackground)
 
             // Date Picker
             DatePicker(

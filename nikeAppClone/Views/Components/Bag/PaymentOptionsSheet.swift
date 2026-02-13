@@ -57,7 +57,7 @@ struct PaymentOptionsSheet: View {
                         // Card Logo
                         ZStack {
                             RoundedRectangle(cornerRadius: 4)
-                                .stroke(Color(white: 0.87), lineWidth: 1)
+                                .stroke(Color.lightGray87, lineWidth: 1)
                                 .frame(width: 72, height: 48)
                                 .background(Color.white)
                                 .cornerRadius(4)
@@ -65,11 +65,11 @@ struct PaymentOptionsSheet: View {
                             // Mastercard Logo
                             HStack(spacing: -8) {
                                 Circle()
-                                    .fill(Color(red: 0.92, green: 0.15, blue: 0.15))
+                                    .fill(Color.cardRed)
                                     .frame(width: 20, height: 20)
 
                                 Circle()
-                                    .fill(Color(red: 0.98, green: 0.56, blue: 0.09))
+                                    .fill(Color.cardOrange)
                                     .frame(width: 20, height: 20)
                             }
                         }
@@ -127,7 +127,7 @@ struct PaymentOptionsSheet: View {
                         .padding(.vertical, 16)
                         .overlay(
                             RoundedRectangle(cornerRadius: 100)
-                                .stroke(Color(white: 0.9), lineWidth: 1)
+                                .stroke(Color.lightGray90, lineWidth: 1)
                         )
                 }
             }
