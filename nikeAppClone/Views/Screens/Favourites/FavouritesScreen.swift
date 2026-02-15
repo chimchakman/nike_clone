@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FavouritesScreen: View {
     @Environment(FavouriteStore.self) var favouriteStore: FavouriteStore
-    @Environment(Products.self) var products: Products
+    @Environment(ProductsViewModel.self) var products: ProductsViewModel
     @State private var selectedProduct: Product?
     @State private var sheetStep: SheetStep = .options
     @Binding var selectedTab: Tab

@@ -19,7 +19,7 @@ struct BagItemRow: View {
             // Product image + info
             HStack(alignment: .top, spacing: 12) {
                 VStack(spacing: 6) {
-                    Image(product.image)
+                    Image(product.imageUrl)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 150, height: 150)
@@ -112,10 +112,8 @@ struct BagItemRow: View {
     }
 
     private var formattedItemPrice: String {
-        let cleaned = product.price
-            .replacingOccurrences(of: "US$", with: "")
-            .replacingOccurrences(of: ",", with: "")
-        let unitPrice = Double(cleaned) ?? 0
-        return String(format: "US$%.2f", unitPrice * Double(bagItem.quantity))
+        let unitPrice = NSDecimalNumber(decimal: product.price).doubleValue
+        let totalPrice = unitPrice * Double(bagItem.quantity)
+        return String(format: "US$%.2f", totalPrice)
     }
 }

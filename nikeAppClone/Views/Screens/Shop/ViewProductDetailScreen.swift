@@ -46,5 +46,5 @@ struct ViewProductDetailScreen: View {
 }
 
 #Preview {
-    ViewProductDetailScreen(productDetail: ProductDetails().getOne(id: "Nike03"))
+    ViewProductDetailScreen(productDetail: .preview)
 }

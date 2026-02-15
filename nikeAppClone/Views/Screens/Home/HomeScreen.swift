@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeScreen: View {
-    @Environment(HomeProducts.self) var homeProducts: HomeProducts
+    @Environment(ProductsViewModel.self) var homeProducts: ProductsViewModel
 
     var body: some View {
         ScrollView (.vertical, showsIndicators: false) {

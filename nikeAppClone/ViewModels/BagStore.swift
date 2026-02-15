@@ -12,6 +12,8 @@ final class BagStore {
     private(set) var items: [BagItem] = []
     private let defaults: UserDefaults
     private let storageKey = "bag_items"
+    private let migrationKey = "bag_migrated_to_supabase"
+    private var syncTask: Task<Void, Never>?
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
@@ -20,7 +22,7 @@ final class BagStore {
 
     // MARK: - Public API
 
-    func add(productId: String, size: String, quantity: Int = 1) {
+    func add(productId: Int, size: String, quantity: Int = 1) {
         if let index = items.firstIndex(where: {
             $0.productId == productId && $0.size == size
         }) {
@@ -29,14 +31,16 @@ final class BagStore {
             items.append(BagItem(productId: productId, size: size, quantity: quantity))
         }
         save()
+        queueSync()
     }
 
-    func remove(itemId: String) {
+    func remove(itemId: Int?) {
         items.removeAll { $0.id == itemId }
         save()
+        queueSync()
     }
 
-    func updateQuantity(itemId: String, quantity: Int) {
+    func updateQuantity(itemId: Int?, quantity: Int) {
         guard let index = items.firstIndex(where: { $0.id == itemId }) else { return }
         if quantity <= 0 {
             items.remove(at: index)
@@ -44,11 +48,13 @@ final class BagStore {
             items[index].quantity = quantity
         }
         save()
+        queueSync()
     }
 
     func clear() {
         items.removeAll()
         save()
+        queueSync()
     }
 
     var totalItemCount: Int {
@@ -57,6 +63,52 @@ final class BagStore {
 
     var isEmpty: Bool {
         items.isEmpty
+    }
+
+    // MARK: - Supabase Sync
+
+    func migrateToSupabase(userId: UUID) async {
+        guard !defaults.bool(forKey: migrationKey) else { return }
+
+        // Fetch existing server data
+        let serverItems = try? await BagService.shared.fetchBagItems(userId: userId)
+
+        // Merge local items with server
+        for localItem in items {
+            let existsOnServer = serverItems?.contains(where: {
+                $0.productId == localItem.productId && $0.size == localItem.size
+            }) ?? false
+
+            if !existsOnServer {
+                try? await BagService.shared.syncBagItem(userId: userId, item: localItem)
+            }
+        }
+
+        // Mark migration complete
+        defaults.set(true, forKey: migrationKey)
+
+        // Refresh from server
+        await refreshFromServer(userId: userId)
+    }
+
+    func refreshFromServer(userId: UUID) async {
+        guard let serverItems = try? await BagService.shared.fetchBagItems(userId: userId) else {
+            return
+        }
+        items = serverItems
+        save() // Keep local cache in sync
+    }
+
+    private func queueSync() {
+        guard let userId = AuthService.shared.currentUserId else { return }
+
+        syncTask?.cancel()
+        syncTask = Task {
+            try? await Task.sleep(for: .seconds(1)) // Debounce
+            for item in items {
+                try? await BagService.shared.syncBagItem(userId: userId, item: item)
+            }
+        }
     }
 
     // MARK: - Persistence (UserDefaults)

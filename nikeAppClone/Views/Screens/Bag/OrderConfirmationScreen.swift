@@ -10,7 +10,7 @@ import SwiftUI
 struct OrderConfirmationScreen: View {
     @Environment(\.dismiss) var dismiss
     @Environment(BagStore.self) var bagStore: BagStore
-    @Environment(Products.self) var products: Products
+    @Environment(ProductsViewModel.self) var products: ProductsViewModel
 
     var deliveryAddress: Address
     var paymentCard: PaymentCard
@@ -203,7 +203,7 @@ struct OrderConfirmationScreen: View {
 
                         HStack(spacing: 16) {
                             // Product Image
-                            Image(product.image)
+                            Image(product.imageUrl)
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
                                 .frame(width: 120, height: 120)
@@ -218,7 +218,7 @@ struct OrderConfirmationScreen: View {
                                 Text(product.name)
                                     .font(.system(size: 14, weight: .medium))
 
-                                Text(product.price)
+                                Text("US$\(NSDecimalNumber(decimal: product.price).doubleValue, specifier: "%.2f")")
                                     .font(.system(size: 14, weight: .medium))
 
                                 Text(product.colors)
@@ -291,16 +291,10 @@ struct OrderConfirmationScreen: View {
     private var formattedSubtotal: String {
         let total = bagStore.items.reduce(0.0) { sum, item in
             let product = products.getOne(id: item.productId)
-            return sum + (parsePrice(product.price) * Double(item.quantity))
+            let unitPrice = NSDecimalNumber(decimal: product.price).doubleValue
+            return sum + (unitPrice * Double(item.quantity))
         }
         return String(format: "US$%.2f", total)
-    }
-
-    private func parsePrice(_ priceString: String) -> Double {
-        let cleaned = priceString
-            .replacingOccurrences(of: "US$", with: "")
-            .replacingOccurrences(of: ",", with: "")
-        return Double(cleaned) ?? 0
     }
 }
 
@@ -325,5 +319,5 @@ struct OrderConfirmationScreen: View {
         )
     )
     .environment(BagStore())
-    .environment(Products())
+    .environment(ProductsViewModel())
 }

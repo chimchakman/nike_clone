@@ -26,7 +26,7 @@ struct ProductCard: View {
     var body: some View {
         VStack(alignment: .leading) {
             ZStack(alignment: .topTrailing) {
-                Image(product.image)
+                Image(product.imageUrl)
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -57,7 +57,7 @@ struct ProductCard: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 
-                Text(product.price)
+                Text("US$\(NSDecimalNumber(decimal: product.price).doubleValue, specifier: "%.2f")")
                     .font(.system(size: 15, weight: .medium))
                     .foregroundStyle(.black)
                     .fixedSize(horizontal: false, vertical: true)

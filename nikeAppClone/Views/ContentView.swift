@@ -11,9 +11,8 @@ struct ContentView: View {
     @State private var selectedTab: Tab = .home
     @State var favouriteStore = FavouriteStore()
     @State var bagStore = BagStore()
-    @State var products = Products()
-    @State var homeProducts = HomeProducts()
-    @State var productDetails = ProductDetails()
+    @State var productsViewModel = ProductsViewModel()
+    @State var productDetailsViewModel = ProductDetailsViewModel()
 
     var body: some View {
         VStack(spacing: 0) {
@@ -22,9 +21,20 @@ struct ContentView: View {
         }
         .environment(favouriteStore)
         .environment(bagStore)
-        .environment(products)
-        .environment(homeProducts)
-        .environment(productDetails)
+        .environment(productsViewModel)
+        .environment(productDetailsViewModel)
+        .task {
+            // Get current user ID
+            await AuthService.shared.refreshSession()
+            guard let userId = AuthService.shared.currentUserId else { return }
+
+            // Trigger one-time migrations
+            await bagStore.migrateToSupabase(userId: userId)
+            await favouriteStore.migrateToSupabase(userId: userId)
+
+            // Load products from Supabase
+            await productsViewModel.loadProducts()
+        }
     }
 }
 

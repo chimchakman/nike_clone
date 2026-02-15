@@ -10,10 +10,10 @@ import SwiftUI
 struct ProductDetailScreen: View {
     @Environment(FavouriteStore.self) var favouriteStore: FavouriteStore
     @Environment(BagStore.self) var bagStore: BagStore
-    @Environment(ProductDetails.self) var productDetails: ProductDetails
+    @Environment(ProductDetailsViewModel.self) var productDetails: ProductDetailsViewModel
     let product: Product
-    var productDetail: ProductDetail {
-        productDetails.getOne(id: product.id)
+    var productDetail: ProductDetail? {
+        productDetails.getProductDetail(id: product.id)
     }
     @State private var selectedSize: String = "M"
     init(product: Product) {
@@ -22,17 +22,18 @@ struct ProductDetailScreen: View {
     
     
     var body: some View {
-        TopBar(title: productDetail.name, buttons: [.back, .search])
+        TopBar(title: productDetail?.name ?? product.name, buttons: [.back, .search])
         ScrollView (.vertical, showsIndicators: false) {
-            VStack {
-                Image(productDetail.image)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: .infinity)
-                
-                ScrollView (.horizontal, showsIndicators: false) {
-                    HStack {
-                        Image(productDetail.imageDetail1)
+            if let productDetail = productDetail {
+                VStack {
+                    Image(productDetail.imageUrl)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity)
+
+                    ScrollView (.horizontal, showsIndicators: false) {
+                        HStack {
+                            Image(productDetail.imageDetail1)
                             .resizable()
                             .scaledToFill()
                             .frame(width: 160, height: 160)
@@ -55,8 +56,8 @@ struct ProductDetailScreen: View {
                 
                 Text(productDetail.name)
                     .font(.system(size: 28, weight: .medium, design: .default))
-                
-                Text(productDetail.price)
+
+                Text("US$\(NSDecimalNumber(decimal: productDetail.price).doubleValue, specifier: "%.2f")")
                     .font(.system(size: 16, weight: .medium, design: .default))
                 
                 Text(productDetail.longDescription)
@@ -156,14 +157,21 @@ struct ProductDetailScreen: View {
                 }
             }
             .padding(.horizontal, 24)
+            } else {
+                ProgressView()
+                    .padding()
+            }
         }
         .navigationBarBackButtonHidden(true)
+        .task {
+            await productDetails.loadProductDetail(productId: product.id)
+        }
     }
 }
 
 #Preview {
-    ProductDetailScreen(product: Products().getOne(id: "Nike03"))
+    ProductDetailScreen(product: .preview)
         .environment(FavouriteStore())
         .environment(BagStore())
-        .environment(ProductDetails())
+        .environment(ProductDetailsViewModel())
 }

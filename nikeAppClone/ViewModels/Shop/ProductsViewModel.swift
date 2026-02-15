@@ -1,42 +1,54 @@
 //
-//  ProductData.swift
+//  ProductsViewModel.swift
 //  nikeAppClone
 //
 //  Created by Sunghyun Kim on 1/29/26.
 //
 
-import SwiftUI
+import Foundation
 
 @Observable
-final class Products {
-    private let productList: [Product] = [
-        .init(id: "Nike01", name: "Nike Everyday Plus Cushioned", description: "Training Crew Socks (3 Pairs)", colors: "10 Colours", price: "US$22", image: "image-1"),
-        .init(id: "Nike02", name: "Nike Everyday Plus Cushioned", description: "Training Crew Socks (6 Pairs)", colors: "7 Colours", price: "US$28", image: "image-2"),
-        .init(id: "Nike03", name: "Nike Elite Crew", description: "Basketball Socks", colors: "7 Colours", price: "US$16", image: "image-3"),
-        .init(id: "Nike04", name: "Nike Everyday Plus Cushioned", description: "Training Ankle Socks (6 Pairs)", colors: "5 Colours", price: "US$60", image: "image-4")
-    ]
+final class ProductsViewModel {
+    private(set) var products: [Product] = []
+    private(set) var homeProducts: [Product] = []
+    private(set) var isLoading = false
+    private(set) var errorMessage: String?
+
+    func loadProducts() async {
+        isLoading = true
+        defer { isLoading = false }
+
+        do {
+            let allProducts = try await ProductService.shared.fetchProducts()
+
+            // Filter by category
+            products = allProducts.filter { $0.category == "Socks" }
+            homeProducts = Array(allProducts.filter { $0.category == "Shoes" }.prefix(2))
+
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    func getProduct(id: Int) -> Product? {
+        products.first(where: { $0.id == id }) ?? homeProducts.first(where: { $0.id == id })
+    }
 
     func getAll() -> [Product] {
-        return productList
+        return products
     }
 
-    func getOne(id: String) -> Product {
-        return productList.first(where: { $0.id == id })!
-    }
-}
-
-@Observable
-final class HomeProducts {
-    private let homeProductList: [Product] = [
-        .init(id: "Nike05", name: "Air Jordan XXXVI", description: "N/A", colors: "N/A", price: "US$185", image: "homeImage2"),
-        .init(id: "Nike06", name: "Air Jordan XXXVI", description: "N/A", colors: "N/A", price: "US$185", image: "homeImage2")
-    ]
-
-    func getAll() -> [Product] {
-        return homeProductList
-    }
-
-    func getOne(id: String) -> Product {
-        return homeProductList.first(where: { $0.id == id })!
+    func getOne(id: Int) -> Product {
+        return getProduct(id: id) ?? Product(
+            id: id,
+            name: "Unknown Product",
+            description: "",
+            colors: "",
+            price: 0,
+            imageUrl: "",
+            category: "",
+            createdAt: Date(),
+            isDeleted: false
+        )
     }
 }
