@@ -11,9 +11,7 @@ struct ProductCardHoriontal: View {
     var product: Product
     var body: some View {
         VStack(alignment: .leading) {
-            Image(product.imageUrl)
-                .resizable()
-                .scaledToFit()
+            RemoteImage(url: product.imageUrl, contentMode: .fit)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             
             VStack(alignment: .leading, spacing: 5) {

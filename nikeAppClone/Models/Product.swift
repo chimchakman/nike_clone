@@ -44,7 +44,7 @@ extension Product {
         description: "Training Crew Socks (3 Pairs)",
         colors: "1 Color",
         price: Decimal(string: "18.97")!,
-        imageUrl: "image-1",
+        imageUrl: "https://via.placeholder.com/400x400.png?text=Preview",
         category: "Socks",
         createdAt: Date(),
         isDeleted: false

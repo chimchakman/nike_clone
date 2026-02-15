@@ -19,9 +19,7 @@ struct BagItemRow: View {
             // Product image + info
             HStack(alignment: .top, spacing: 12) {
                 VStack(spacing: 6) {
-                    Image(product.imageUrl)
-                        .resizable()
-                        .scaledToFit()
+                    RemoteImage(url: product.imageUrl, contentMode: .fit)
                         .frame(width: 150, height: 150)
                         .background(Color.lightGray96)
 

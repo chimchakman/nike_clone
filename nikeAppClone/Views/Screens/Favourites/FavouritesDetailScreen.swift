@@ -26,7 +26,7 @@ struct ProductSheet: View {
         case .options:
             VStack(alignment: .leading, spacing: 16) {
                 HStack(spacing: 12) {
-                    Image(product.imageUrl)
+                    RemoteImage(url: product.imageUrl, contentMode: .fit)
                         .frame(height: 202)
                     VStack(alignment: .leading, spacing: 4) {
                         Text(product.name).font(.headline)

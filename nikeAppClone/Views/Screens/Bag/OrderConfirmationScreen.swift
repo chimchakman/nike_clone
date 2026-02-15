@@ -203,9 +203,7 @@ struct OrderConfirmationScreen: View {
 
                         HStack(spacing: 16) {
                             // Product Image
-                            Image(product.imageUrl)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
+                            RemoteImage(url: product.imageUrl, contentMode: .fill)
                                 .frame(width: 120, height: 120)
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
 

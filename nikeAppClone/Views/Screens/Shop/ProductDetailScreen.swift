@@ -26,25 +26,20 @@ struct ProductDetailScreen: View {
         ScrollView (.vertical, showsIndicators: false) {
             if let productDetail = productDetail {
                 VStack {
-                    Image(productDetail.imageUrl)
-                        .resizable()
-                        .scaledToFit()
+                    RemoteImage(url: productDetail.imageUrl, contentMode: .fit)
                         .frame(maxWidth: .infinity)
 
                     ScrollView (.horizontal, showsIndicators: false) {
                         HStack {
-                            Image(productDetail.imageDetail1)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 160, height: 160)
-                        Image(productDetail.imageDetail2)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 160, height: 160)
-                        Image(productDetail.imageDetail3)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 160, height: 160)
+                            RemoteImage(url: productDetail.imageDetail1, contentMode: .fill)
+                                .frame(width: 160, height: 160)
+                                .clipped()
+                            RemoteImage(url: productDetail.imageDetail2, contentMode: .fill)
+                                .frame(width: 160, height: 160)
+                                .clipped()
+                            RemoteImage(url: productDetail.imageDetail3, contentMode: .fill)
+                                .frame(width: 160, height: 160)
+                                .clipped()
                     }
                 }
             }

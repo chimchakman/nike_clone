@@ -26,9 +26,7 @@ struct ProductCard: View {
     var body: some View {
         VStack(alignment: .leading) {
             ZStack(alignment: .topTrailing) {
-                Image(product.imageUrl)
-                    .resizable()
-                    .scaledToFit()
+                RemoteImage(url: product.imageUrl, contentMode: .fit)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 if layOut == .shop {
                     Button(action: {favouriteStore.toggle(product.id)}) {
