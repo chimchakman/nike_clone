@@ -12,6 +12,7 @@ struct OrderConfirmationScreen: View {
     @Environment(BagStore.self) var bagStore: BagStore
     @Environment(ProductsViewModel.self) var products: ProductsViewModel
 
+    var order: Order
     var deliveryAddress: Address
     var paymentCard: PaymentCard
 
@@ -107,7 +108,7 @@ struct OrderConfirmationScreen: View {
 
                         Spacer()
 
-                        Text("C19283791823")
+                        Text(order.orderNumber)
                             .font(.system(size: 14))
                             .foregroundStyle(.secondary)
                     }
@@ -223,7 +224,7 @@ struct OrderConfirmationScreen: View {
                                     .font(.system(size: 12))
                                     .foregroundStyle(.secondary)
 
-                                Text("Size L (W 10-13 / M 8-12)")
+                                Text("Size \(firstItem.size)")
                                     .font(.system(size: 12))
                                     .foregroundStyle(.secondary)
 
@@ -298,6 +299,17 @@ struct OrderConfirmationScreen: View {
 
 #Preview {
     OrderConfirmationScreen(
+        order: Order(
+            id: 1,
+            userId: "user-123",
+            addressId: 1,
+            paymentCardId: 1,
+            totalAmount: 199.99,
+            status: .confirmed,
+            createdAt: Date(),
+            updatedAt: Date(),
+            isDeleted: false
+        ),
         deliveryAddress: Address(
             firstName: "John",
             lastName: "Smith",

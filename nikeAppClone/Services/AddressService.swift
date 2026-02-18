@@ -51,16 +51,20 @@ final class AddressService {
         }
     }
 
-    /// Save a new address
-    func saveAddress(userId: UUID, address: Address) async throws {
+    /// Save a new address and return the created address with ID
+    func saveAddress(userId: UUID, address: Address) async throws -> Address {
         do {
             var mutableAddress = address
             mutableAddress.userId = userId
 
-            try await client
+            let savedAddress: Address = try await client
                 .from("addresses")
                 .insert(mutableAddress)
+                .select()
+                .single()
                 .execute()
+                .value
+            return savedAddress
         } catch {
             throw AddressError.saveFailed(error.localizedDescription)
         }

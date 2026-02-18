@@ -17,9 +17,13 @@ struct CheckoutScreen: View {
     @State private var selectedPaymentCard: PaymentCard? = nil
     @State private var showPaymentSuccess = false
     @State private var showOrderConfirmation = false
+    @State private var createdOrder: Order? = nil
+    @State private var isProcessingPayment = false
+    @State private var showErrorAlert = false
+    @State private var errorMessage = ""
 
     private var isCheckoutReady: Bool {
-        deliveryAddress != nil && selectedPaymentCard != nil
+        deliveryAddress != nil && selectedPaymentCard != nil && !isProcessingPayment
     }
 
     var body: some View {
@@ -102,12 +106,8 @@ struct CheckoutScreen: View {
                     Divider()
 
                     Button(action: {
-                        if isCheckoutReady {
-                            showPaymentSuccess = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                showPaymentSuccess = false
-                                showOrderConfirmation = true
-                            }
+                        Task {
+                            await submitPayment()
                         }
                     }) {
                         Text("Submit Payment")
@@ -149,14 +149,20 @@ struct CheckoutScreen: View {
                 .presentationDragIndicator(.visible)
             }
             .fullScreenCover(isPresented: $showOrderConfirmation) {
-                if let address = deliveryAddress, let card = selectedPaymentCard {
+                if let order = createdOrder, let address = deliveryAddress, let card = selectedPaymentCard {
                     OrderConfirmationScreen(
+                        order: order,
                         deliveryAddress: address,
                         paymentCard: card
                     )
                     .environment(bagStore)
                     .environment(products)
                 }
+            }
+            .alert("Payment Failed", isPresented: $showErrorAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(errorMessage)
             }
 
             // Payment Success Overlay with Custom Transition
@@ -178,6 +184,80 @@ struct CheckoutScreen: View {
             return sum + (unitPrice * Double(item.quantity))
         }
         return String(format: "US$%.2f", total)
+    }
+
+    // MARK: - Submit Payment
+
+    private func submitPayment() async {
+        guard let address = deliveryAddress, let card = selectedPaymentCard else {
+            return
+        }
+
+        guard !bagStore.items.isEmpty else {
+            errorMessage = "Your cart is empty."
+            showErrorAlert = true
+            return
+        }
+
+        isProcessingPayment = true
+        showPaymentSuccess = true
+
+        do {
+            // Get current user ID
+            let userId = try await AuthService.shared.getCurrentUser().uuidString
+
+            // Validate address and card IDs
+            guard let addressId = address.id, let cardId = card.id else {
+                throw OrderError.invalidData
+            }
+
+            // Prepare order items from bag
+            var orderItems: [OrderItemCreate] = []
+            for bagItem in bagStore.items {
+                let product = products.getOne(id: bagItem.productId)
+                orderItems.append(OrderItemCreate(
+                    productId: bagItem.productId,
+                    size: bagItem.size,
+                    quantity: bagItem.quantity,
+                    priceAtPurchase: product.price
+                ))
+            }
+
+            // Calculate total amount
+            let totalAmount = bagStore.items.reduce(Decimal(0)) { sum, item in
+                let product = products.getOne(id: item.productId)
+                return sum + (product.price * Decimal(item.quantity))
+            }
+
+            // Create order
+            let order = try await OrderService.shared.createOrder(
+                userId: userId,
+                addressId: addressId,
+                paymentCardId: cardId,
+                items: orderItems,
+                totalAmount: totalAmount
+            )
+
+            // Wait for animation
+            try await Task.sleep(nanoseconds: 1_500_000_000) // 1.5 seconds
+
+            // Success
+            await MainActor.run {
+                createdOrder = order
+                showPaymentSuccess = false
+                showOrderConfirmation = true
+                isProcessingPayment = false
+            }
+
+        } catch {
+            // Handle error
+            await MainActor.run {
+                showPaymentSuccess = false
+                isProcessingPayment = false
+                errorMessage = error.localizedDescription
+                showErrorAlert = true
+            }
+        }
     }
 }
 

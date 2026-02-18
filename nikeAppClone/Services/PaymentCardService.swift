@@ -51,8 +51,8 @@ final class PaymentCardService {
         }
     }
 
-    /// Save a new payment card
-    func savePaymentCard(userId: UUID, card: PaymentCard) async throws {
+    /// Save a new payment card and return the created card with ID
+    func savePaymentCard(userId: UUID, card: PaymentCard) async throws -> PaymentCard {
         do {
             var mutableCard = card
             mutableCard.userId = userId
@@ -63,10 +63,14 @@ final class PaymentCardService {
                 mutableCard.lastFourDigits = String(digits.suffix(4))
             }
 
-            try await client
+            let savedCard: PaymentCard = try await client
                 .from("payment_cards")
                 .insert(mutableCard)
+                .select()
+                .single()
                 .execute()
+                .value
+            return savedCard
         } catch {
             throw PaymentCardError.saveFailed(error.localizedDescription)
         }

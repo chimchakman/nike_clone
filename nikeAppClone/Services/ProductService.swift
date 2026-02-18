@@ -44,6 +44,23 @@ final class ProductService {
         }
     }
 
+    /// Fetch a single product by ID
+    func fetchProduct(id: Int) async throws -> Product {
+        do {
+            let product: Product = try await client
+                .from("products")
+                .select()
+                .eq("id", value: id)
+                .eq("is_deleted", value: false)
+                .single()
+                .execute()
+                .value
+            return product
+        } catch {
+            throw ProductError.fetchFailed(error.localizedDescription)
+        }
+    }
+
     /// Fetch product details by product ID
     func fetchProductDetails(productId: Int) async throws -> ProductDetail {
         do {

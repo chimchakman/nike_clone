@@ -21,6 +21,9 @@ struct AddAddressSheet: View {
     @State private var selectedCountry: String = "Country"
     @State private var phoneNumber: String = ""
     @State private var showCountryPicker = false
+    @State private var isSaving = false
+    @State private var showErrorAlert = false
+    @State private var errorMessage = ""
 
     private let countries = ["United States", "Canada", "United Kingdom", "Australia", "Germany", "France", "Japan", "South Korea"]
 
@@ -140,32 +143,23 @@ struct AddAddressSheet: View {
             // Bottom Button
             VStack(spacing: 0) {
                 Button(action: {
-                    let address = Address(
-                        firstName: firstName,
-                        lastName: lastName,
-                        addressLine1: addressLine1,
-                        addressLine2: addressLine2,
-                        postalCode: postalCode,
-                        city: city,
-                        country: selectedCountry,
-                        phoneNumber: phoneNumber
-                    )
-                    onSave(address)
-                    dismiss()
+                    Task {
+                        await saveAddress()
+                    }
                 }) {
-                    Text("Add Delivery Address")
+                    Text(isSaving ? "Saving..." : "Add Delivery Address")
                         .font(.system(size: 16, weight: .medium))
-                        .foregroundStyle(isFormValid ? .white : Color.disabledText)
+                        .foregroundStyle((isFormValid && !isSaving) ? .white : Color.disabledText)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(isFormValid ? .black : Color.disabledBackground)
+                        .background((isFormValid && !isSaving) ? .black : Color.disabledBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 100))
                         .overlay(
                             RoundedRectangle(cornerRadius: 100)
-                                .stroke(isFormValid ? .black : Color.disabledBackground, lineWidth: 1)
+                                .stroke((isFormValid && !isSaving) ? .black : Color.disabledBackground, lineWidth: 1)
                         )
                 }
-                .disabled(!isFormValid)
+                .disabled(!isFormValid || isSaving)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 16)
             }
@@ -183,6 +177,53 @@ struct AddAddressSheet: View {
                 )
         }
         .background(Color.white)
+        .alert("Error", isPresented: $showErrorAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(errorMessage)
+        }
+    }
+
+    // MARK: - Save Address
+
+    private func saveAddress() async {
+        guard isFormValid else { return }
+
+        isSaving = true
+
+        do {
+            // Get current user ID
+            let userId = try await AuthService.shared.getCurrentUser()
+
+            // Create address object
+            let address = Address(
+                firstName: firstName,
+                lastName: lastName,
+                addressLine1: addressLine1,
+                addressLine2: addressLine2,
+                postalCode: postalCode,
+                city: city,
+                country: selectedCountry,
+                phoneNumber: phoneNumber
+            )
+
+            // Save to Supabase and get back the address with ID
+            let savedAddress = try await AddressService.shared.saveAddress(userId: userId, address: address)
+
+            // Success
+            await MainActor.run {
+                onSave(savedAddress)
+                dismiss()
+            }
+
+        } catch {
+            // Handle error
+            await MainActor.run {
+                isSaving = false
+                errorMessage = error.localizedDescription
+                showErrorAlert = true
+            }
+        }
     }
 }
 

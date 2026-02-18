@@ -19,6 +19,9 @@ struct PaymentOptionsSheet: View {
         cardType: .mastercard
     )
     @State private var showAddCardSheet = false
+    @State private var isSaving = false
+    @State private var showErrorAlert = false
+    @State private var errorMessage = ""
 
     var body: some View {
         VStack(spacing: 0) {
@@ -103,19 +106,19 @@ struct PaymentOptionsSheet: View {
             // Bottom Buttons
             VStack(spacing: 14) {
                 Button(action: {
-                    if let card = selectedCard {
-                        onPaymentSelected?(card)
+                    Task {
+                        await saveAndContinue()
                     }
-                    dismiss()
                 }) {
-                    Text("Continue")
+                    Text(isSaving ? "Saving..." : "Continue")
                         .font(.system(size: 16, weight: .medium))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(Color.black)
+                        .background(isSaving ? Color.gray : Color.black)
                         .clipShape(RoundedRectangle(cornerRadius: 100))
                 }
+                .disabled(isSaving || selectedCard == nil)
 
                 Button(action: {
                     showAddCardSheet = true
@@ -149,6 +152,46 @@ struct PaymentOptionsSheet: View {
         .sheet(isPresented: $showAddCardSheet) {
             // TODO: Add card form sheet
             Text("Add Card Form")
+        }
+        .alert("Error", isPresented: $showErrorAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(errorMessage)
+        }
+    }
+
+    // MARK: - Save and Continue
+
+    private func saveAndContinue() async {
+        guard let card = selectedCard else { return }
+
+        isSaving = true
+
+        do {
+            var cardToSave = card
+
+            // If card doesn't have an ID, save it to Supabase first
+            if card.id == nil {
+                // Get current user ID
+                let userId = try await AuthService.shared.getCurrentUser()
+
+                // Save to Supabase and get back the card with ID
+                cardToSave = try await PaymentCardService.shared.savePaymentCard(userId: userId, card: card)
+            }
+
+            // Success
+            await MainActor.run {
+                onPaymentSelected?(cardToSave)
+                dismiss()
+            }
+
+        } catch {
+            // Handle error
+            await MainActor.run {
+                isSaving = false
+                errorMessage = error.localizedDescription
+                showErrorAlert = true
+            }
         }
     }
 }

@@ -30,6 +30,30 @@ final class ProductsViewModel {
         }
     }
 
+    /// Load a single product by ID and cache it
+    func loadProduct(id: Int) async {
+        // Check if already loaded
+        if getProduct(id: id) != nil {
+            return
+        }
+
+        do {
+            let product = try await ProductService.shared.fetchProduct(id: id)
+
+            // Add to appropriate array based on category
+            if product.category == "Socks" {
+                products.append(product)
+            } else if product.category == "Shoes" {
+                homeProducts.append(product)
+            } else {
+                // Add to products array as default
+                products.append(product)
+            }
+        } catch {
+            print("Failed to load product \(id): \(error.localizedDescription)")
+        }
+    }
+
     func getProduct(id: Int) -> Product? {
         products.first(where: { $0.id == id }) ?? homeProducts.first(where: { $0.id == id })
     }

@@ -22,6 +22,22 @@ struct Address: Identifiable, Codable {
     var createdAt: Date
     var isDeleted: Bool
 
+    enum CodingKeys: String, CodingKey {
+        case id
+        case userId = "user_id"
+        case firstName = "first_name"
+        case lastName = "last_name"
+        case addressLine1 = "address_line_1"
+        case addressLine2 = "address_line_2"
+        case postalCode = "postal_code"
+        case city
+        case country
+        case phoneNumber = "phone_number"
+        case isDefault = "is_default"
+        case createdAt = "created_at"
+        case isDeleted = "is_deleted"
+    }
+
     init(
         firstName: String,
         lastName: String,

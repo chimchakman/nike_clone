@@ -20,6 +20,12 @@ struct BagScreen: View {
                 filledBagView
             }
         }
+        .task {
+            // Load products for all items in bag
+            for item in bagStore.items {
+                await products.loadProduct(id: item.productId)
+            }
+        }
     }
 
     // MARK: - Empty State
