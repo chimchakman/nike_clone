@@ -3,6 +3,7 @@
 
 # Xcode user / cache
 *.xcuserdata
+xcuserdata/
 *.xcuserstate
 DerivedData/
 .omc
@@ -12,3 +13,12 @@ build/
 
 # Swift Package
 .swiftpm/
+
+# Supabase local
+supabase/.temp/
+
+# Local config
+.mcp.json
+
+# Temporary SQL files
+fix_storage_*.sql
