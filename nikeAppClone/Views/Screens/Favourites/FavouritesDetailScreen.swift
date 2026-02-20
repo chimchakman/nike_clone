@@ -26,13 +26,13 @@ struct ProductSheet: View {
         case .options:
             VStack(alignment: .leading, spacing: 16) {
                 HStack(spacing: 12) {
-                    Image(product.image)
+                    RemoteImage(url: product.imageUrl, contentMode: .fit)
                         .frame(height: 202)
                     VStack(alignment: .leading, spacing: 4) {
                         Text(product.name).font(.headline)
                         Text("Shoes").foregroundStyle(.secondary)
                         Spacer()
-                        Text(product.price).font(.headline)
+                        Text("US$\(NSDecimalNumber(decimal: product.price).doubleValue, specifier: "%.2f")").font(.headline)
                     }
                     .frame(maxHeight: 202)
                 }
@@ -89,6 +89,6 @@ struct ProductSheet: View {
 }
 
 #Preview {
-    ProductSheet(product: Products().getOne(id: "Nike01"), step: .constant(.options), onClose: {})
+    ProductSheet(product: .preview, step: .constant(.options), onClose: {})
         .environment(BagStore())
 }

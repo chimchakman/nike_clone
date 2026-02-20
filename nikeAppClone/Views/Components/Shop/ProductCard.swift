@@ -26,9 +26,7 @@ struct ProductCard: View {
     var body: some View {
         VStack(alignment: .leading) {
             ZStack(alignment: .topTrailing) {
-                Image(product.image)
-                    .resizable()
-                    .scaledToFit()
+                RemoteImage(url: product.imageUrl, contentMode: .fit)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 if layOut == .shop {
                     Button(action: {favouriteStore.toggle(product.id)}) {
@@ -57,7 +55,7 @@ struct ProductCard: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 
-                Text(product.price)
+                Text("US$\(NSDecimalNumber(decimal: product.price).doubleValue, specifier: "%.2f")")
                     .font(.system(size: 15, weight: .medium))
                     .foregroundStyle(.black)
                     .fixedSize(horizontal: false, vertical: true)

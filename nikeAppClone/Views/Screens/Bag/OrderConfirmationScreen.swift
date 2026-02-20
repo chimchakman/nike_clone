@@ -10,8 +10,9 @@ import SwiftUI
 struct OrderConfirmationScreen: View {
     @Environment(\.dismiss) var dismiss
     @Environment(BagStore.self) var bagStore: BagStore
-    @Environment(Products.self) var products: Products
+    @Environment(ProductsViewModel.self) var products: ProductsViewModel
 
+    var order: Order
     var deliveryAddress: Address
     var paymentCard: PaymentCard
 
@@ -107,7 +108,7 @@ struct OrderConfirmationScreen: View {
 
                         Spacer()
 
-                        Text("C19283791823")
+                        Text(order.orderNumber)
                             .font(.system(size: 14))
                             .foregroundStyle(.secondary)
                     }
@@ -131,11 +132,11 @@ struct OrderConfirmationScreen: View {
                             // Mastercard Logo
                             HStack(spacing: -4) {
                                 Circle()
-                                    .fill(Color(red: 0.92, green: 0.15, blue: 0.15))
+                                    .fill(Color.cardRed)
                                     .frame(width: 16, height: 16)
 
                                 Circle()
-                                    .fill(Color(red: 0.98, green: 0.56, blue: 0.09))
+                                    .fill(Color.cardOrange)
                                     .frame(width: 16, height: 16)
                             }
                         }
@@ -203,9 +204,7 @@ struct OrderConfirmationScreen: View {
 
                         HStack(spacing: 16) {
                             // Product Image
-                            Image(product.image)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
+                            RemoteImage(url: product.imageUrl, contentMode: .fill)
                                 .frame(width: 120, height: 120)
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
 
@@ -213,19 +212,19 @@ struct OrderConfirmationScreen: View {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text("Arrives by Tue, 10 May")
                                     .font(.system(size: 12))
-                                    .foregroundStyle(Color(red: 0.13, green: 0.55, blue: 0.13))
+                                    .foregroundStyle(Color.successGreen)
 
                                 Text(product.name)
                                     .font(.system(size: 14, weight: .medium))
 
-                                Text(product.price)
+                                Text("US$\(NSDecimalNumber(decimal: product.price).doubleValue, specifier: "%.2f")")
                                     .font(.system(size: 14, weight: .medium))
 
                                 Text(product.colors)
                                     .font(.system(size: 12))
                                     .foregroundStyle(.secondary)
 
-                                Text("Size L (W 10-13 / M 8-12)")
+                                Text("Size \(firstItem.size)")
                                     .font(.system(size: 12))
                                     .foregroundStyle(.secondary)
 
@@ -264,7 +263,7 @@ struct OrderConfirmationScreen: View {
                         .padding(.vertical, 16)
                         .overlay(
                             RoundedRectangle(cornerRadius: 100)
-                                .stroke(Color(white: 0.9), lineWidth: 1)
+                                .stroke(Color.lightGray90, lineWidth: 1)
                         )
                 }
             }
@@ -291,21 +290,26 @@ struct OrderConfirmationScreen: View {
     private var formattedSubtotal: String {
         let total = bagStore.items.reduce(0.0) { sum, item in
             let product = products.getOne(id: item.productId)
-            return sum + (parsePrice(product.price) * Double(item.quantity))
+            let unitPrice = NSDecimalNumber(decimal: product.price).doubleValue
+            return sum + (unitPrice * Double(item.quantity))
         }
         return String(format: "US$%.2f", total)
-    }
-
-    private func parsePrice(_ priceString: String) -> Double {
-        let cleaned = priceString
-            .replacingOccurrences(of: "US$", with: "")
-            .replacingOccurrences(of: ",", with: "")
-        return Double(cleaned) ?? 0
     }
 }
 
 #Preview {
     OrderConfirmationScreen(
+        order: Order(
+            id: 1,
+            userId: "user-123",
+            addressId: 1,
+            paymentCardId: 1,
+            totalAmount: 199.99,
+            status: .confirmed,
+            createdAt: Date(),
+            updatedAt: Date(),
+            isDeleted: false
+        ),
         deliveryAddress: Address(
             firstName: "John",
             lastName: "Smith",
@@ -325,5 +329,5 @@ struct OrderConfirmationScreen: View {
         )
     )
     .environment(BagStore())
-    .environment(Products())
+    .environment(ProductsViewModel())
 }

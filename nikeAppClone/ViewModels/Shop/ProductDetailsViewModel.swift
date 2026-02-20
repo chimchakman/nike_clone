@@ -1,30 +1,34 @@
 //
-//  ProductDetailData.swift
+//  ProductDetailsViewModel.swift
 //  nikeAppClone
 //
 //  Created by Sunghyun Kim on 1/29/26.
 //
 
-import SwiftUI
+import Foundation
 
 @Observable
-final class ProductDetails {
+final class ProductDetailsViewModel {
+    private(set) var productDetails: [Int: ProductDetail] = [:]
+    private(set) var isLoading: Set<Int> = []
+    private(set) var errorMessages: [Int: String] = [:]
 
-    private let productDetailList: [ProductDetail] = [
-        .init(id: "Nike01", name: "Nike Everyday Plus Cushioned", category: "Training Crew Socks", longDescription: "The Nike Everyday Plus Cushioned Socks bring comfort to your workout with extra cushioning under the heel and forefoot and a snug, supportive arch band. Sweat-wicking power and breathability up top help keep your feet dry and cool to help push you through that extra set.", info: "• Shown: Multi-Color\n• Style: SX6897-965", price: "US$10", image: "image-1", imageDetail1: "productDetail2", imageDetail2: "productDetail3", imageDetail3: "productDetail4", copyTitle: "LEGENDARY STYLE REFINED.", copyDescription: "The Nike Everyday Plus Cushioned Socks bring comfort to your workout with extra cushioning under the heel and forefoot and a snug, supportive arch band. Sweat-wicking power and breathability up top help keep your feet dry and cool to help push you through that extra set.", benefits: "• Cushioning under the forefoot and heel helps soften the impact of your workout.\n• Dri-FIT technology helps your feet stay dry and comfortable.\n• Band around the arch feels snug and supportive.\n• Breathable knit pattern on top adds ventilation.\n• Reinforced heel and toe are made to last.", productDetails: "• Fabric: 61-67% cotton/30-36% \npolyester/2% spandex/1% nylon\n• Machine wash\n• Imported\n• Note: Material percentages may vary slightly depending on color. Check label for actual content.\n• Shown: Multi-Color\n• Style: SX6897-965"),
+    func loadProductDetail(productId: Int) async {
+        guard productDetails[productId] == nil else { return }
 
-        .init(id: "Nike02", name: "Nike Everyday Plus Cushioned", category: "Training Crew Socks", longDescription: "The Nike Everyday Plus Cushioned Socks bring comfort to your workout with extra cushioning under the heel and forefoot and a snug, supportive arch band. Sweat-wicking power and breathability up top help keep your feet dry and cool to help push you through that extra set.", info: "• Shown: Multi-Color\n• Style: SX6897-965", price: "US$10", image: "image-2", imageDetail1: "productDetail2", imageDetail2: "productDetail3", imageDetail3: "productDetail4", copyTitle: "LEGENDARY STYLE REFINED.", copyDescription: "The Nike Everyday Plus Cushioned Socks bring comfort to your workout with extra cushioning under the heel and forefoot and a snug, supportive arch band. Sweat-wicking power and breathability up top help keep your feet dry and cool to help push you through that extra set.", benefits: "• Cushioning under the forefoot and heel helps soften the impact of your workout.\n• Dri-FIT technology helps your feet stay dry and comfortable.\n• Band around the arch feels snug and supportive.\n• Breathable knit pattern on top adds ventilation.\n• Reinforced heel and toe are made to last.", productDetails: "• Fabric: 61-67% cotton/30-36% \npolyester/2% spandex/1% nylon\n• Machine wash\n• Imported\n• Note: Material percentages may vary slightly depending on color. Check label for actual content.\n• Shown: Multi-Color\n• Style: SX6897-965"),
+        isLoading.insert(productId)
+        defer { isLoading.remove(productId) }
 
-        .init(id: "Nike03", name: "Nike Everyday Plus Cushioned", category: "Training Crew Socks", longDescription: "The Nike Everyday Plus Cushioned Socks bring comfort to your workout with extra cushioning under the heel and forefoot and a snug, supportive arch band. Sweat-wicking power and breathability up top help keep your feet dry and cool to help push you through that extra set.", info: "• Shown: Multi-Color\n• Style: SX6897-965", price: "US$10", image: "image-3", imageDetail1: "productDetail2", imageDetail2: "productDetail3", imageDetail3: "productDetail4", copyTitle: "LEGENDARY STYLE REFINED.", copyDescription: "The Nike Everyday Plus Cushioned Socks bring comfort to your workout with extra cushioning under the heel and forefoot and a snug, supportive arch band. Sweat-wicking power and breathability up top help keep your feet dry and cool to help push you through that extra set.", benefits: "• Cushioning under the forefoot and heel helps soften the impact of your workout.\n• Dri-FIT technology helps your feet stay dry and comfortable.\n• Band around the arch feels snug and supportive.\n• Breathable knit pattern on top adds ventilation.\n• Reinforced heel and toe are made to last.", productDetails: "• Fabric: 61-67% cotton/30-36% \npolyester/2% spandex/1% nylon\n• Machine wash\n• Imported\n• Note: Material percentages may vary slightly depending on color. Check label for actual content.\n• Shown: Multi-Color\n• Style: SX6897-965"),
-
-        .init(id: "Nike04", name: "Nike Everyday Plus Cushioned", category: "Training Crew Socks", longDescription: "The Nike Everyday Plus Cushioned Socks bring comfort to your workout with extra cushioning under the heel and forefoot and a snug, supportive arch band. Sweat-wicking power and breathability up top help keep your feet dry and cool to help push you through that extra set.", info: "• Shown: Multi-Color\n• Style: SX6897-965", price: "US$10", image: "productDetail1", imageDetail1: "productDetail2", imageDetail2: "productDetail3", imageDetail3: "productDetail4", copyTitle: "LEGENDARY STYLE REFINED.", copyDescription: "The Nike Everyday Plus Cushioned Socks bring comfort to your workout with extra cushioning under the heel and forefoot and a snug, supportive arch band. Sweat-wicking power and breathability up top help keep your feet dry and cool to help push you through that extra set.", benefits: "• Cushioning under the forefoot and heel helps soften the impact of your workout.\n• Dri-FIT technology helps your feet stay dry and comfortable.\n• Band around the arch feels snug and supportive.\n• Breathable knit pattern on top adds ventilation.\n• Reinforced heel and toe are made to last.", productDetails: "• Fabric: 61-67% cotton/30-36% \npolyester/2% spandex/1% nylon\n• Machine wash\n• Imported\n• Note: Material percentages may vary slightly depending on color. Check label for actual content.\n• Shown: Multi-Color\n• Style: SX6897-965")
-    ]
-
-    func getAll() -> [ProductDetail]{
-        return productDetailList
+        do {
+            let detail = try await ProductService.shared.fetchProductDetails(productId: productId)
+            productDetails[productId] = detail
+            errorMessages.removeValue(forKey: productId)
+        } catch {
+            errorMessages[productId] = error.localizedDescription
+        }
     }
 
-    func getOne(id: String) -> ProductDetail {
-        return productDetailList.first(where: { $0.id == id })!
+    func getProductDetail(id: Int) -> ProductDetail? {
+        productDetails[id]
     }
 }

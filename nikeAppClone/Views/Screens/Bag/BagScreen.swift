@@ -9,7 +9,7 @@ import SwiftUI
 
 struct BagScreen: View {
     @Environment(BagStore.self) var bagStore: BagStore
-    @Environment(Products.self) var products: Products
+    @Environment(ProductsViewModel.self) var products: ProductsViewModel
     @State private var showCheckout = false
 
     var body: some View {
@@ -18,6 +18,12 @@ struct BagScreen: View {
                 emptyBagView
             } else {
                 filledBagView
+            }
+        }
+        .task {
+            // Load products for all items in bag
+            for item in bagStore.items {
+                await products.loadProduct(id: item.productId)
             }
         }
     }
@@ -123,7 +129,7 @@ struct BagScreen: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(white: 0.96))
+        .background(Color.lightGray96)
         .cornerRadius(12)
     }
 
@@ -182,16 +188,10 @@ struct BagScreen: View {
     private var formattedSubtotal: String {
         let total = bagStore.items.reduce(0.0) { sum, item in
             let product = products.getOne(id: item.productId)
-            return sum + (parsePrice(product.price) * Double(item.quantity))
+            let unitPrice = NSDecimalNumber(decimal: product.price).doubleValue
+            return sum + (unitPrice * Double(item.quantity))
         }
         return String(format: "US$%.2f", total)
-    }
-
-    private func parsePrice(_ priceString: String) -> Double {
-        let cleaned = priceString
-            .replacingOccurrences(of: "US$", with: "")
-            .replacingOccurrences(of: ",", with: "")
-        return Double(cleaned) ?? 0
     }
 }
 
@@ -199,5 +199,5 @@ struct BagScreen: View {
     BagScreen()
         .environment(BagStore())
         .environment(FavouriteStore())
-        .environment(Products())
+        .environment(ProductsViewModel())
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RootView: View {
-    @EnvironmentObject private var auth: AuthState
+    @Environment(\.authState) private var auth
 
     var body: some View {
         Group {

@@ -17,7 +17,7 @@ struct SignInPasswordScreen: View {
     @State private var showError: Bool = false
     @State private var errorMessage: String = ""
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var auth: AuthState
+    @Environment(\.authState) private var auth
 
     var body: some View {
         ZStack {
@@ -74,7 +74,7 @@ struct SignInPasswordScreen: View {
                 } label: {
                     Text("Cancel")
                         .font(.system(size: 17, weight: .regular))
-                        .foregroundColor(Color(red: 0, green: 122/255, blue: 1))
+                        .foregroundColor(Color.linkBlue)
                         .tracking(-0.408)
                 }
 
@@ -94,14 +94,14 @@ struct SignInPasswordScreen: View {
                 } label: {
                     Image(systemName: "arrow.clockwise")
                         .font(.system(size: 17, weight: .medium))
-                        .foregroundColor(Color(red: 0, green: 122/255, blue: 1))
+                        .foregroundColor(Color.linkBlue)
                         .frame(width: 24, height: 24)
                 }
             }
             .frame(height: 58)
             .padding(.horizontal, 16)
             .background(
-                Color(red: 249/255, green: 249/255, blue: 249/255, opacity: 0.94)
+                Color.screenBackgroundTranslucent
                     .blur(radius: 10)
             )
             .overlay(
@@ -128,7 +128,7 @@ struct SignInPasswordScreen: View {
 
                 Text(email)
                     .font(.system(size: 16))
-                    .foregroundColor(Color(red: 118/255, green: 118/255, blue: 118/255))
+                    .foregroundColor(Color.textGray)
             }
 
             // Password input field with toggle
@@ -147,7 +147,7 @@ struct SignInPasswordScreen: View {
                 .frame(height: 54)
                 .background(
                     RoundedRectangle(cornerRadius: 6)
-                        .stroke(Color(red: 118/255, green: 118/255, blue: 118/255), lineWidth: 1)
+                        .stroke(Color.textGray, lineWidth: 1)
                 )
                 .disableAutocorrection(true)
                 .textContentType(.password)
@@ -159,7 +159,7 @@ struct SignInPasswordScreen: View {
                 } label: {
                     Image(systemName: showPassword ? "eye.slash.fill" : "eye.fill")
                         .font(.system(size: 16))
-                        .foregroundColor(Color(red: 118/255, green: 118/255, blue: 118/255))
+                        .foregroundColor(Color.textGray)
                         .frame(width: 40, height: 54)
                 }
                 .padding(.trailing, 8)

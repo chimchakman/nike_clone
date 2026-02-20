@@ -9,11 +9,11 @@ import SwiftUI
 
 @main
 struct nikeAppCloneApp: App {
-    @StateObject private var auth = AuthState()
+    @State private var auth = AuthState()
     var body: some Scene {
         WindowGroup {
             RootView()
-                .environmentObject(auth)
+                .environment(\EnvironmentValues.authState, auth)
         }
     }
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ShopScreen: View {
-    @Environment(Products.self) var products: Products
+    @Environment(ProductsViewModel.self) var products: ProductsViewModel
 
     var body: some View {
         VStack(spacing: 0) {

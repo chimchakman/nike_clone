@@ -11,17 +11,15 @@ struct ProductCardHoriontal: View {
     var product: Product
     var body: some View {
         VStack(alignment: .leading) {
-            Image(product.image)
-                .resizable()
-                .scaledToFit()
+            RemoteImage(url: product.imageUrl, contentMode: .fit)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             
             VStack(alignment: .leading, spacing: 5) {
                 Text(product.name)
                     .font(.system(size: 14, weight: .medium))
                     .fixedSize(horizontal: false, vertical: true)
-                
-                Text(product.price)
+
+                Text("US$\(NSDecimalNumber(decimal: product.price).doubleValue, specifier: "%.2f")")
                     .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(.gray)
                     .fixedSize(horizontal: false, vertical: true)

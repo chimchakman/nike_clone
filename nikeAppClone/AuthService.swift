@@ -32,8 +32,14 @@ final class AuthService {
     static let shared = AuthService()
 
     private let client = SupabaseManager.shared.client
+    private var _currentSession: Session?
 
     private init() {}
+
+    /// Get current user ID synchronously from cached session
+    var currentUserId: UUID? {
+        _currentSession?.user.id
+    }
 
     /// Sign up a new user with email and password
     func signUp(email: String, password: String) async throws -> UUID {
@@ -84,5 +90,10 @@ final class AuthService {
         } catch {
             throw AuthError.invalidSession
         }
+    }
+
+    /// Refresh and cache the current session for synchronous access
+    func refreshSession() async {
+        _currentSession = try? await client.auth.session
     }
 }

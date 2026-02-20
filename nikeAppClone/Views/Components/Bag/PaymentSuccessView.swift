@@ -19,12 +19,12 @@ struct PaymentSuccessView: View {
                 // Green Checkmark Circle
                 ZStack {
                     Circle()
-                        .stroke(Color(red: 0.13, green: 0.55, blue: 0.13), lineWidth: 4)
+                        .stroke(Color.successGreen, lineWidth: 4)
                         .frame(width: 80, height: 80)
 
                     Image(systemName: "checkmark")
                         .font(.system(size: 40, weight: .semibold))
-                        .foregroundStyle(Color(red: 0.13, green: 0.55, blue: 0.13))
+                        .foregroundStyle(Color.successGreen)
                 }
 
                 Spacer()

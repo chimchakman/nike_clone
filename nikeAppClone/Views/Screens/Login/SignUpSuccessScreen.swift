@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SignUpSuccessScreen: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var auth: AuthState
+    @Environment(\.authState) private var auth
 
     var body: some View {
         ZStack {
@@ -74,7 +74,7 @@ struct SignUpSuccessScreen: View {
                 } label: {
                     Text("Cancel")
                         .font(.system(size: 17, weight: .regular))
-                        .foregroundColor(Color(red: 0, green: 122/255, blue: 1))
+                        .foregroundColor(Color.linkBlue)
                         .tracking(-0.408)
                 }
 
@@ -94,14 +94,14 @@ struct SignUpSuccessScreen: View {
                 } label: {
                     Image(systemName: "arrow.clockwise")
                         .font(.system(size: 17, weight: .medium))
-                        .foregroundColor(Color(red: 0, green: 122/255, blue: 1))
+                        .foregroundColor(Color.linkBlue)
                         .frame(width: 24, height: 24)
                 }
             }
             .frame(height: 58)
             .padding(.horizontal, 16)
             .background(
-                Color(red: 249/255, green: 249/255, blue: 249/255, opacity: 0.94)
+                Color.screenBackgroundTranslucent
                     .blur(radius: 10)
             )
             .overlay(

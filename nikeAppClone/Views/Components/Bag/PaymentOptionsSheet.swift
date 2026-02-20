@@ -19,6 +19,9 @@ struct PaymentOptionsSheet: View {
         cardType: .mastercard
     )
     @State private var showAddCardSheet = false
+    @State private var isSaving = false
+    @State private var showErrorAlert = false
+    @State private var errorMessage = ""
 
     var body: some View {
         VStack(spacing: 0) {
@@ -57,7 +60,7 @@ struct PaymentOptionsSheet: View {
                         // Card Logo
                         ZStack {
                             RoundedRectangle(cornerRadius: 4)
-                                .stroke(Color(white: 0.87), lineWidth: 1)
+                                .stroke(Color.lightGray87, lineWidth: 1)
                                 .frame(width: 72, height: 48)
                                 .background(Color.white)
                                 .cornerRadius(4)
@@ -65,11 +68,11 @@ struct PaymentOptionsSheet: View {
                             // Mastercard Logo
                             HStack(spacing: -8) {
                                 Circle()
-                                    .fill(Color(red: 0.92, green: 0.15, blue: 0.15))
+                                    .fill(Color.cardRed)
                                     .frame(width: 20, height: 20)
 
                                 Circle()
-                                    .fill(Color(red: 0.98, green: 0.56, blue: 0.09))
+                                    .fill(Color.cardOrange)
                                     .frame(width: 20, height: 20)
                             }
                         }
@@ -103,19 +106,19 @@ struct PaymentOptionsSheet: View {
             // Bottom Buttons
             VStack(spacing: 14) {
                 Button(action: {
-                    if let card = selectedCard {
-                        onPaymentSelected?(card)
+                    Task {
+                        await saveAndContinue()
                     }
-                    dismiss()
                 }) {
-                    Text("Continue")
+                    Text(isSaving ? "Saving..." : "Continue")
                         .font(.system(size: 16, weight: .medium))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(Color.black)
+                        .background(isSaving ? Color.gray : Color.black)
                         .clipShape(RoundedRectangle(cornerRadius: 100))
                 }
+                .disabled(isSaving || selectedCard == nil)
 
                 Button(action: {
                     showAddCardSheet = true
@@ -127,7 +130,7 @@ struct PaymentOptionsSheet: View {
                         .padding(.vertical, 16)
                         .overlay(
                             RoundedRectangle(cornerRadius: 100)
-                                .stroke(Color(white: 0.9), lineWidth: 1)
+                                .stroke(Color.lightGray90, lineWidth: 1)
                         )
                 }
             }
@@ -149,6 +152,46 @@ struct PaymentOptionsSheet: View {
         .sheet(isPresented: $showAddCardSheet) {
             // TODO: Add card form sheet
             Text("Add Card Form")
+        }
+        .alert("Error", isPresented: $showErrorAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(errorMessage)
+        }
+    }
+
+    // MARK: - Save and Continue
+
+    private func saveAndContinue() async {
+        guard let card = selectedCard else { return }
+
+        isSaving = true
+
+        do {
+            var cardToSave = card
+
+            // If card doesn't have an ID, save it to Supabase first
+            if card.id == nil {
+                // Get current user ID
+                let userId = try await AuthService.shared.getCurrentUser()
+
+                // Save to Supabase and get back the card with ID
+                cardToSave = try await PaymentCardService.shared.savePaymentCard(userId: userId, card: card)
+            }
+
+            // Success
+            await MainActor.run {
+                onPaymentSelected?(cardToSave)
+                dismiss()
+            }
+
+        } catch {
+            // Handle error
+            await MainActor.run {
+                isSaving = false
+                errorMessage = error.localizedDescription
+                showErrorAlert = true
+            }
         }
     }
 }
