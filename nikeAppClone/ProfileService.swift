@@ -84,7 +84,9 @@ final class ProfileService {
         firstName: String? = nil,
         surname: String? = nil,
         dateOfBirth: Date? = nil,
-        emailUpdates: Bool? = nil
+        emailUpdates: Bool? = nil,
+        hometown: String? = nil,
+        bio: String? = nil
     ) async throws {
         let dateString: String?
         if let dateOfBirth = dateOfBirth {
@@ -99,7 +101,9 @@ final class ProfileService {
             firstName: firstName,
             surname: surname,
             dateOfBirth: dateString,
-            emailUpdates: emailUpdates
+            emailUpdates: emailUpdates,
+            hometown: hometown,
+            bio: bio
         )
 
         do {

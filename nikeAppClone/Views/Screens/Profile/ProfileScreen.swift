@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProfileScreen: View {
     @State private var viewModel = ProfileViewModel()
+    @State private var showEditProfile = false
 
     var body: some View {
         ScrollView {
@@ -68,6 +69,15 @@ struct ProfileScreen: View {
         .task {
             await viewModel.loadProfile()
         }
+        .fullScreenCover(isPresented: $showEditProfile, onDismiss: {
+            Task {
+                await viewModel.loadProfile()
+            }
+        }) {
+            if let profile = viewModel.userProfile {
+                ProfileEditScreen(profile: profile)
+            }
+        }
     }
 
     // MARK: - Profile Header
@@ -102,7 +112,7 @@ struct ProfileScreen: View {
                 theme: .white,
                 style: .outline
             ) {
-                // Edit profile action
+                showEditProfile = true
             }
         }
     }

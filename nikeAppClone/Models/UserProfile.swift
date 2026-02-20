@@ -14,6 +14,8 @@ struct UserProfile: Codable {
     private let dateOfBirthString: String
     let emailUpdates: Bool
     private let createdAtString: String
+    let hometown: String?
+    let bio: String?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -22,6 +24,8 @@ struct UserProfile: Codable {
         case dateOfBirthString = "date_of_birth"
         case emailUpdates = "email_updates"
         case createdAtString = "created_at"
+        case hometown
+        case bio
     }
 
     var dateOfBirth: Date {
@@ -58,11 +62,15 @@ struct UpdateProfileRequest: Codable {
     let surname: String?
     let dateOfBirth: String?
     let emailUpdates: Bool?
+    let hometown: String?
+    let bio: String?
 
     enum CodingKeys: String, CodingKey {
         case firstName = "first_name"
         case surname
         case dateOfBirth = "date_of_birth"
         case emailUpdates = "email_updates"
+        case hometown
+        case bio
     }
 }
